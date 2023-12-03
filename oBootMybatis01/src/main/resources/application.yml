@@ -1,0 +1,52 @@
+server:
+  port: 8188
+  
+# Oracle Connect
+spring:
+
+  # file Size
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+        
+  datasource:
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@localhost:1521/xe
+    username: scott2
+    password: tiger
+
+  # jpa Setting
+  jpa:
+    show-sql: true
+    # Operation --> create / none
+    hibernate:  
+      ddl-auto: update
+      
+  # view Resolver
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+      
+  # gmail Transfer
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: chayeji0317@gmail.com
+    password: jyea nclv ndzb icfd
+    properties: 
+      mail:
+        smtp:
+          auth: true
+          starttls.enable: true     
+      
+          
+# Mybatis          classpath = src/main/resources 의미
+mybatis:
+  config-location: classpath:configuration.xml
+  mapper-locations: classpath:mappers/*.xml
+  
+logging.level:
+  org.hibernate.SQL: debug  # logger를 통해 하이버네이트 실행 SQL 
+                  
