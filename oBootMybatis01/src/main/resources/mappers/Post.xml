@@ -13,8 +13,8 @@
 	
 	
 	<insert id="postInsert" parameterType="Post">
-			INSERT INTO post 
-			VALUES ((SELECT NVL(MAX(post_no), 0) + 1 FROM post), #{post_name}, sysdate, #{post_content})
+			INSERT INTO post (post_no, post_name, post_content, create_date)
+			VALUES ((SELECT NVL(MAX(post_no), 0) + 1 FROM post), #{post_name}, #{post_content}, sysdate)
 	</insert>
 	
 	
@@ -31,5 +31,22 @@
 	<delete id="postDelete" parameterType="int">
 		delete from post where post_no = #{post_no}
 	</delete>
+	
+	
+	<!-- 댓글 select -->
+	<select id="comtSelectList" parameterType="int" resultType="Comt">
+		select 	*
+		from 	comt
+		where   post_no = #{post_no}
+	</select>
+	
+	
+	<!-- 댓글 insert (select nvl(max(comment_id), 0)+1 from comt)  -->
+	<insert id="comtInsert" parameterType="Comt">
+		insert into comt (comment_id, post_no, comment_content, comment_create_date)
+        	   VALUES (10, #{post_no}, #{comment_content}, sysdate )  
+	</insert>
+	
+	
 	
 </mapper>

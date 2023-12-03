@@ -8,11 +8,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.oracle.oBootMybatis01.model.Comt;
 import com.oracle.oBootMybatis01.model.Post;
 import com.oracle.oBootMybatis01.service.postService;
 
 import lombok.RequiredArgsConstructor;
+import oracle.net.aso.c;
 
 @Controller
 @RequiredArgsConstructor
@@ -41,10 +44,8 @@ public class postController {
 	// insert 하기 위해 페이지 이동 
 	@RequestMapping(value = "post_insert_move")
 	public String postInsertMove() {
-		
 		return "post_insert";
 	}
-	
 
 	// insert
 	@PostMapping(value = "post_insert") 
@@ -64,10 +65,29 @@ public class postController {
 	@RequestMapping(value = "post_content")
 	public String postUpdate(int post_no, Model model) {
 		
+		// post 상세 내역
 		Post postContent = ps.postContent(post_no);
 		model.addAttribute("postContent", postContent);
 		
+		// 댓글 select 
+		List<Comt> comtSelect = ps.comtSelect(post_no);
+		System.out.println("comtSelect.size()-> " + comtSelect.size());
+		model.addAttribute("comtSelect", comtSelect);
+		
 		return "post_content";
+	}
+	
+	// 댓글 insert
+	@PostMapping(value = "comt_insert")
+	public String comtInsert(@ModelAttribute Comt comt, Model model, int post_no, RedirectAttributes redirectAttributes) {
+		
+		comt.setPost_no(post_no);
+		int comtInsert = ps.comtInsert(comt);
+		System.out.println("댓글 insert-> " + comtInsert);
+		
+		redirectAttributes.addAttribute("post_no", comt.getPost_no());
+		
+		return "redirect:/post_content?post_no={post_no}";
 	}
 	
 // -------------------------------------------------------------	
@@ -111,7 +131,7 @@ public class postController {
 		return postDelete;
 	}
 	
-	
+// -------------------------------------------------------------	
 	
 	
 	

@@ -5,9 +5,10 @@
 
 <configuration>
 	<typeAliases>
-		
-	<typeAlias alias="Post"   	type="com.oracle.oBootMybatis01.model.Post"/>	
-
-</typeAliases>
-		
+			
+		<typeAlias alias="Post"   	type="com.oracle.oBootMybatis01.model.Post"/>
+		<typeAlias alias="Comt"   	type="com.oracle.oBootMybatis01.model.Comt"/>
+	
+	</typeAliases>
+			
 </configuration>

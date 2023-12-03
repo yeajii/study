@@ -5,10 +5,10 @@ import java.sql.Date;
 import lombok.Data;
 
 @Data
-public class Post {
+public class Comt {
+	private int 	comment_id;
 	private int 	post_no;
-	private String 	post_name;
-	private String 	post_content;
-	private Date 	create_date;
-	
+	private String 	comment_content;
+	private Date 	comment_create_date;
+
 }

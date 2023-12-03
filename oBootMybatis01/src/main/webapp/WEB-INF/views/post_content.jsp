@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>    
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,14 +26,13 @@ function postDelete(post_no){
 		}
 	});
 }
-
-
 </script>
 
 </head>
 
 <body>
 
+	<!-- post 상세 조회 -->
 	<table border="1">
 		<tr>
 			<td>번호</td> <td>이름</td> <td>날짜</td> <td>내용</td>
@@ -49,6 +49,44 @@ function postDelete(post_no){
 			<td><button type="button" onclick="postDelete(${postContent.post_no})">삭제</button></td>
 		</tr>
 	</table>
+	
+	
+	<!-- 댓글 insert -->
+	<form action="comt_insert" method="post">
+	<input type="hidden" name="post_no" value="${postContent.post_no}">
+		<table border="1">
+			<tr>
+				<td>댓글 입력</td>
+				<td><textarea cols="40" rows="5" name="comment_content"></textarea></td>
+			</tr>
+			<tr>
+				<td><input type="submit" value="등록"></td>
+			</tr>
+		</table>
+	</form>
+	
+
+	<!-- 댓글 select -->
+	<h5>댓글</h5>
+	<table border="1">
+		<tr>
+			<td>번호</td> <td>이름</td> <td>날짜</td> <td>내용</td>
+		</tr>
+		<c:forEach var="comt" items="${comtSelect}">
+			<tr>
+				<td>${comt.post_no}</td> 
+				<td>${comt.comment_id}</td>
+				<td>${comt.comment_create_date}</td>
+				<td>${comt.comment_content}</td>
+			</tr>
+		</c:forEach>
+	</table>
+	
+	
+	
+	
+	
+	
 
 </body>
 </html>

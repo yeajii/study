@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.oracle.oBootMybatis01.dao.postDao;
+import com.oracle.oBootMybatis01.model.Comt;
 import com.oracle.oBootMybatis01.model.Post;
 
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,7 @@ public class postServiceImpl implements postService {
 	
 	private final postDao pd;
 
-	// 전체 리스트 select 
+	// �쟾泥� 由ъ뒪�듃 select 
 	@Override
 	public List<Post> allPostList() {
 		List<Post> allPostList = pd.allPostList();
@@ -33,7 +34,7 @@ public class postServiceImpl implements postService {
 	}
 
 	
-	//  상세 내역
+	//  �긽�꽭 �궡�뿭
 	@Override
 	public Post postContent(int post_no) {
 		Post postContent = pd.postContent(post_no);
@@ -56,6 +57,22 @@ public class postServiceImpl implements postService {
 		int postDelete = pd.postDelete(post_no);
 		
 		return postDelete;
+	}
+
+	// 댓글 select 
+	@Override
+	public List<Comt> comtSelect(int post_no) {
+		List<Comt> comtSelect = pd.comtSelect(post_no);
+		
+		return comtSelect;
+	}
+
+	// 댓글 insert 
+	@Override
+	public int comtInsert(Comt comt) {
+		int comtInsert = pd.comtInsert(comt);
+		
+		return comtInsert;
 	}
 	
 	
