@@ -6,9 +6,10 @@ import lombok.Data;
 
 @Data
 public class Post {
-	private int 	post_no;
-	private String 	post_name;
-	private String 	post_content;
-	private Date 	create_date;
+	private int 	postNo;
+	private String 	postName;
+	private String 	postContent;
+	private Date 	createDate;
+	private String 	isDeleted;		// 1 삭제 안함, 0 삭제 
 	
 }

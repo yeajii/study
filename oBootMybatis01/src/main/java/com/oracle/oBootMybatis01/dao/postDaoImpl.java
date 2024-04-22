@@ -5,7 +5,6 @@ import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
-import com.oracle.oBootMybatis01.model.Comt;
 import com.oracle.oBootMybatis01.model.Post;
 
 import lombok.RequiredArgsConstructor;
@@ -16,95 +15,90 @@ public class postDaoImpl implements postDao {
 	
 	private final SqlSession session;
 
-	// �쟾泥� 由ъ뒪�듃 select 
+	// 전체 리스트 갯수
 	@Override
-	public List<Post> allPostList() {
-		List<Post> allPostList = null;
-		try {
-			allPostList = session.selectList("allPostList");
-			System.out.println("postDaoImpl allPostList.size()-> " + allPostList.size());
-		} catch (Exception e) {
-			System.out.println("allPostList Exception-> " + e);
-		}
-		return allPostList;
-	}
-
-	
-	// insert
-	@Override
-	public int postInsert(Post post) {
-		int postInsert = 0;
-		try {
-			postInsert = session.insert("postInsert", post);
-			System.out.println("postDaoImpl postInsert-> " + postInsert);
-		} catch (Exception e) {
-			System.out.println("postInsert Exception-> " + e);
-		}
-		return postInsert;
-	}
-
-
-	// �긽�꽭 �궡�뿭
-	@Override
-	public Post postContent(int post_no) {
-		Post postContent = null;
-		try {
-			postContent = session.selectOne("postContent", post_no);
-		} catch (Exception e) {
-			System.out.println("postContent Exception-> " + e);
-		}
-		return postContent;
-	}
-
-	// update
-	@Override
-	public int postUpdateStart(Post post) {
-		int postUpdateStart = 0;
-		try {
-			postUpdateStart = session.update("postUpdateStart", post);
-		} catch (Exception e) {
-			System.out.println("postUpdateStart Exception-> " + e);
-		}
-		return postUpdateStart;
-	}
-
-	
-	// delete
-	@Override
-	public int postDelete(int post_no) {
-		int postDelete = 0;
-		try {
-			postDelete = session.delete("postDelete", post_no);
-		} catch (Exception e) {
-			System.out.println("postDelete Exception-> " + e);
-		}
-		return postDelete;
-	}
-
-	// 댓글 select 
-	@Override
-	public List<Comt> comtSelect(int post_no) {
-		List<Comt> comtSelect = null;
+	public int postListTotalCount() {
 		
+		int postListTotalCount = 0;
 		try {
-			comtSelect = session.selectList("comtSelectList", post_no);
+			postListTotalCount = session.selectOne("postListTotalCount");
+			System.out.println("postDaoImpl postListTotalCount-> " + postListTotalCount);
 		} catch (Exception e) {
-			System.out.println("comtSelect Exception-> " + e);
+			System.out.println("postListTotalCount Exception-> " + e.getMessage());
 		}
-		return comtSelect;
+		return postListTotalCount;
+	}
+	
+	// 전체 리스트 
+	@Override
+	public List<Post> selectPost() {
+		
+		List<Post> selectPost = null;
+		try {
+			selectPost = session.selectList("selectPost");
+			System.out.println("postDaoImpl selectPost.size-> " + selectPost.size());
+		} catch (Exception e) {
+			System.out.println("postSelect Exception-> " + e.getMessage());
+		}
+		return selectPost;
 	}
 
-	// 댓글 insert 
+	// 상세 페이지
 	@Override
-	public int comtInsert(Comt comt) {
-		int comtInsert = 0;
+	public Post contentPost(int postNo) {
+		
+		Post contentPost = null;
 		try {
-			comtInsert = session.insert("comtInsert", comt);
+			contentPost = session.selectOne("contentPost", postNo);
+			System.out.println("postDaoImpl contentPost-> " + contentPost);
 		} catch (Exception e) {
-			System.out.println("comtSelect Exception-> " + e);
+			System.out.println("contentPost Exception-> " + e.getMessage());
 		}
-		return comtInsert;
+		return contentPost;
 	}
+
+	// 해당 글 삭제
+	@Override
+	public int deletePost(int postNo) {
+		
+		int deletePost = 0;
+		try {
+			deletePost = session.update("deletePost", postNo);
+			System.out.println("postDaoImpl deletePost-> " + deletePost);
+		} catch (Exception e) {
+			System.out.println("deletePost Exception-> " + e.getMessage());
+		}
+		return deletePost;
+	}
+
+	// 해당 글 수정 
+	@Override
+	public int updatePostForm(Post post) {
+		
+		int updatePostForm = 0;
+		try {
+			updatePostForm = session.update("updatePostForm", post);
+			System.out.println("postDaoImpl updatePostForm-> " + updatePostForm);
+		} catch (Exception e) {
+			System.out.println("updatePostForm Exception-> " + e.getMessage());
+		}
+		return updatePostForm;
+	}
+
+	// 새 글 입력 
+	@Override
+	public int insertPostForm(Post post) {
+		
+		int insertPostForm = 0;
+		try {
+			insertPostForm = session.insert("insertPostForm", post);
+			System.out.println("postDaoImpl insertPostForm-> " + insertPostForm);
+		} catch (Exception e) {
+			System.out.println("insertPostForm Exception-> " + e.getMessage());
+		}
+		return insertPostForm;
+	}
+	
 
 	
 

@@ -1,7 +1,6 @@
 server:
-  port: 8188
+  port: 8686
   
-# Oracle Connect
 spring:
 
   # file Size
@@ -9,7 +8,8 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
-        
+  
+  # Oracle Connect      
   datasource:
     driver-class-name: oracle.jdbc.driver.OracleDriver
     url: jdbc:oracle:thin:@localhost:1521/xe
@@ -33,20 +33,22 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: chayeji0317@gmail.com
-    password: jyea nclv ndzb icfd
+    username: 
+    password: 
     properties: 
       mail:
         smtp:
           auth: true
-          starttls.enable: true     
-      
+          starttls.enable: true      
           
 # Mybatis          classpath = src/main/resources 의미
 mybatis:
   config-location: classpath:configuration.xml
   mapper-locations: classpath:mappers/*.xml
   
-logging.level:
-  org.hibernate.SQL: debug  # logger를 통해 하이버네이트 실행 SQL 
+logging:
+  level:
+    org:
+     hibernate.SQL: debug  # logger를 통해 하이버네이트 실행 SQL 
+    
                   
