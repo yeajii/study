@@ -40,7 +40,7 @@
 		<tr> <th>No.</th> <td>${contentPost.postNo}</td> </tr>
 		<tr> <th>작성일</th> <td>${contentPost.createDate}</td> </tr>
 		<tr> <th>제목</th> <td>${contentPost.postName}</td> </tr>
-		<tr> <th>내용</th> <td>${contentPost.postContent}</td> </tr>
+		<tr> <th>내용</th> <td style="width: 70%;">${contentPost.postContent}</td> </tr>
 		<tr>  
 			<td>
 				<input type="button" value="닫기" onclick="location.href='start'">

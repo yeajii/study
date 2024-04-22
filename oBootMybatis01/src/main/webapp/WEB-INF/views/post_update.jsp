@@ -27,7 +27,7 @@
 				<tr> <th>수정일</th> <td><%=strDate%></td> </tr>
 				<tr> <th>No.</th> <td>${contentPost.postNo}</td> </tr>
 				<tr> <th>제목</th> <td> <input type="text" name="postName" value="${contentPost.postName}"> </td> </tr> 
-				<tr> <th>내용</th> <td> <textarea rows="10" cols="50"  type="text" name="postContent">${contentPost.postContent}</textarea></td> </tr>
+				<tr> <th>내용</th> <td> <textarea rows="10" cols="50" name="postContent">${contentPost.postContent}</textarea></td> </tr>
 				<tr> 
 					<td><input type="submit" value="등록"></td> 
 					<td><input type="button" value="닫기" onclick="location.href='start'"></td> 

@@ -93,7 +93,7 @@ public class postController {
 		
 		redirectAttributes.addAttribute("postNo", post.getPostNo());
 		
-		return "redirect:/updatePost?postNo={postNo}";
+		return "redirect:/contentPost?postNo={postNo}";
 	}
 	
 	// 새 글 입력하기 위한 페이지 이동
