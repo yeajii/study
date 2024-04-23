@@ -16,7 +16,7 @@
 		String strDate = simpleDateFormat.format(date);
 	%>
 	
-	<h1>update page</h1>
+	<h1>Update Page</h1>
 	
 	<form action="updatePostForm" method="post">
 	
