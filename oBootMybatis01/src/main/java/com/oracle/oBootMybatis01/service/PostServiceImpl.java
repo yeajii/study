@@ -4,16 +4,16 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.oracle.oBootMybatis01.dao.postDao;
+import com.oracle.oBootMybatis01.dao.PostDao;
 import com.oracle.oBootMybatis01.model.Post;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class postServiceImpl implements postService {
+public class PostServiceImpl implements PostService {
 	
-	private final postDao pd;
+	private final PostDao pd;
 
 	// 전체 리스트 갯수
 	@Override

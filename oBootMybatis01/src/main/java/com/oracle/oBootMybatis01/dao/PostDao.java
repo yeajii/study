@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.oracle.oBootMybatis01.model.Post;
 
-public interface postDao {
+public interface PostDao {
 
 	int postListTotalCount();		// 전체 리스트 갯수
 	

@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.oracle.oBootMybatis01.model.Post;
 
-public interface postService {
+public interface PostService {
 
 	int postListTotalCount();		// 전체 리스트 갯수
 	
@@ -17,6 +17,8 @@ public interface postService {
 	int updatePostForm(Post post);	// 해당 글 수정 
 
 	int insertPostForm(Post post);	// 새 글 입력 
+
+	
 
 
 	

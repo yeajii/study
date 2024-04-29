@@ -6,7 +6,8 @@
 <configuration>
 	<typeAliases>
 			
-		<typeAlias alias="Post"   	type="com.oracle.oBootMybatis01.model.Post"/>
+		<typeAlias alias="Post"   		type="com.oracle.oBootMybatis01.model.Post"/>
+		<typeAlias alias="Comments"   	type="com.oracle.oBootMybatis01.model.Comments"/>
 	
 	</typeAliases>
 			

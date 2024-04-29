@@ -20,7 +20,8 @@
 				,success	: function(data){
 					if(data == 1){
 						alert("해당 글이 삭제되었습니다.");	
-						history.back();				// 이전 페이지 이동 
+						var location = "start";
+						window.location.href = location;
 					}else{
 						alert("해당 글이 삭제되지 않았습니다.");
 					}
@@ -31,101 +32,18 @@
 		}
 	}
 	
-	// 댓글 작성
-/* 	$(function(){
-		$("#comment-write-btn").click(function(){
-			var contents = $("#commentContents").val();
-			// alert("댓글 내용: " + contents);
-		});
-	}); */
-
-	// 댓글 출력
-/* 	var comments = [];						
-	function commentWrite(){
-		var contents = $("#commentContents").val();
-		var comment = {content : contents};
-		comments.push(comment);					// push(): 배열의 끝에 하나 이상의 요소를 추가, 각 댓글을 배열에 추가
-		console.log(comments);
-		
-		$("#comment-list").empty();				// 댓글 리스트 초기화
-		comments.forEach(function(comment){		// 배열을 순회하면서 각 댓글 출력
-			$("#comment-list").append("<div>" + comment.content + "</div>");
-		});
-	} */
-	
-	$(function(){
-		var writeBox = $("#comment-write-box");
-		var textarea = $('<textarea>',{
-						type 	: 'text'
-						,id 	: 'comment-contents'
-						,rows 	: '5'
-						,cols 	: '65'
-						,placeholder : '댓글을 입력하세요..'
-					});
-		var input = $('<input>',{
-						type 	: 'button'
-						,id 	: 'comment-write-btn'
-						,value 	: '댓글 등록'
-					});
-		
-		writeBox.append(textarea);
-		writeBox.append(input);
-		var commentList = $('#comment-list');
-		
-		input.on('click', function(){			// .on() : 첫 번째 인자는 이벤트 함수, 두 번쨰 인자는 호출할 콜백함수를 전달하는 메서드
-			var comment = textarea.val();
-			commentList.append($('<div>').text(comment));	
-			textarea.val('');
-		});
-		
-		//-------------------------- 댓글 버튼 ----------------------------------
-		var allBtn = $('#comment-all-btn');
-		var deleteBtn = $('<input>',{
-						type 	: 'button'
-						,id 	: 'delete-btn'
-						,value 	: '댓글 전체 삭제'
-					});
-		
-		var backgroundBtn = $('<input>',{
-						type 	: 'button'
-						,id 	: 'background-btn'
-						,value 	: '배경색 변경'
-					});
-		
-		var textareaBtn = $('<input>',{
-						type 	: 'button'
-						,id 	: 'textarea-btn'
-						,value 	: 'textarea 배경'
-					});
-		
-		allBtn.append(deleteBtn);
-		allBtn.append(backgroundBtn);
-		allBtn.append(textareaBtn);
-		
-		//-------------------------- 댓글 전체 삭제 ---------------------------------- 
-		deleteBtn.on('click', function(){
-			// console.log("댓글 전체 삭제");
-			commentList.empty();
-		});
-		
-		//-------------------------- 배경색 변경---------------------------------- 
-		backgroundBtn.on({
-			click: function(){
-				$('body').css('background-color', 'white');
-			}
-		
-			,mouseover: function(){
-				$('body').css('background-color', '#FFFFE4');
+	// 댓글 
+	function commentSelect(postNo){
+		alert("글 번호 확인: " + postNo);
+		ajax({
+			url			: 'commentSelect'
+			,data		: {'postNo' : postNo}
+			,dateType	: 'text'
+			,success	: function(data){
+				console.log(data);
 			}
 		});
-		
-		//-------------------------- textarea 배경---------------------------------- 
-		textareaBtn.on('dblclick', function(){
-			$('#comment-contents').css('background-color', '#FFEBFF');
-		});
-		
-		
-	});
+	} 
 	
 	
 </script>
@@ -142,23 +60,12 @@
 			<td>
 				<input type="button" value="닫기" onclick="location.href='start'">
 				<input type="button" value="수정" onclick="location.href='updatePost?postNo=${contentPost.postNo}'">
-				<input type="button" value="삭제" onclick="deletePost(${contentPost.postNo})">		
+				<input type="button" value="삭제" onclick="deletePost(${contentPost.postNo})">
+				<input type="button" value="댓글" onclick="commentSelect(${contentPost.postNo})">		
 			</td>
 		</tr>
 	</table><p>
-	
-<!-- 댓글 작성 -->
-<!--<div id="comment-write">
-	<textarea rows="5" cols="65" id="commentContents" placeholder="댓글을 입력하세요.."></textarea><br>
-	<button id="comment-write-btn" onclick="commentWrite()">댓글 작성</button>
-	</div> -->
-	
-<!-- 댓글 출력 -->
-<!--<div id="comment-list"></div> -->
-	
-	<div id="comment-write-box"></div>
-    <div id="comment-list"></div>
-    <div id="comment-all-btn"></div>	<!-- 댓글 전체 삭제, 노란색배경, 하늘색배경 -->
-	
+
+
 </body>
 </html>

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.oracle.oBootMybatis01.model.Post;
-import com.oracle.oBootMybatis01.service.postService;
+import com.oracle.oBootMybatis01.service.PostService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,9 +21,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-public class postController {
+public class PostController {
 	
-	private final postService ps; 
+	private final PostService ps; 
 	
 	// 전체 리스트 
 	@RequestMapping(value = "start")
@@ -120,7 +120,6 @@ public class postController {
 		
 		return "redirect:/start";
 	}
-	
 	
 	
 }

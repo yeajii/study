@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
-public class postDaoImpl implements postDao {
+public class PostDaoImpl implements PostDao {
 	
 	private final SqlSession session;
 
