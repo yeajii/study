@@ -8,9 +8,62 @@
 <title>Insert title here</title>
 <script type="text/javascript">
 	
+	$(document).ready(function(){
+		
+		createCommentTable();
+		
+		// 댓글 
+		function createCommentTable(){
+			var postNo = ${contentPost.postNo};
+			console.log("글 번호 확인: " + postNo);
+			
+			var table = $('<table border="1"></table>');
+			
+			$.ajax({
+				url			: 'commentSelect'
+				,type		: 'get'
+				,data		: {'postNo' : postNo}
+				,dateType	: 'json'
+				,success	: function(data){
+					console.log(data);
+					
+					table.append(
+						$('<tr></tr>')
+							.append($('<th>No.</th>'))
+							.append($('<th>작성일</th>'))
+							.append($('<th>수정일</th>'))
+							.append($('<th>내용</th>'))
+					);
+					
+					// 테이블 내용
+					$.each(data, function(index, row){
+						console.log("row.commentNo-> " + row.commentNo);
+						console.log("row.commentBody-> " + row.commentBody);
+						
+					    // 새로운 행 생성
+					    var newRow = $('<tr></tr>');
+
+					    newRow.append($('<td></td>').text(row.commentNo));
+					    newRow.append($('<td></td>').text(row.createDate));
+					    newRow.append($('<td></td>').text(row.modifyDate));
+					    newRow.append($('<td></td>').text(row.commentBody));
+
+					    table.append(newRow);
+					});
+					
+						$("#comment-box").append(table);
+					},
+					error: function(e){
+						console.log(e);
+					}
+			});
+		} 
+	});
+	
+	
 	// 해당 글 삭제
 	function deletePost(postNo){
-		alert("삭제할 글 번호: " + postNo);
+		console.log("삭제할 글 번호: " + postNo);
 		if(confirm("삭제하시겠습니까?")){
 			$.ajax({
 				url 		: 'deletePost'
@@ -32,19 +85,6 @@
 		}
 	}
 	
-	// 댓글 
-	function commentSelect(postNo){
-		alert("글 번호 확인: " + postNo);
-		ajax({
-			url			: 'commentSelect'
-			,data		: {'postNo' : postNo}
-			,dateType	: 'text'
-			,success	: function(data){
-				console.log(data);
-			}
-		});
-	} 
-	
 	
 </script>
 </head>
@@ -60,12 +100,13 @@
 			<td>
 				<input type="button" value="닫기" onclick="location.href='start'">
 				<input type="button" value="수정" onclick="location.href='updatePost?postNo=${contentPost.postNo}'">
-				<input type="button" value="삭제" onclick="deletePost(${contentPost.postNo})">
-				<input type="button" value="댓글" onclick="commentSelect(${contentPost.postNo})">		
+				<input type="button" value="삭제" onclick="deletePost(${contentPost.postNo})">		
 			</td>
 		</tr>
 	</table><p>
 
+	<!-- 댓글 -->
+	<div id="comment-box"></div>
 
 </body>
 </html>

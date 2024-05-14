@@ -3,6 +3,12 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.oracle.oBootMybatis01.CommentsMapper">
-
+	
+	<select id="commentSelect" parameterType="int" resultType="Comments">
+		select 	*
+		from 	comments
+		where 	postno = #{postno}
+		and 	isdeleted = '1'
+	</select>
 
 </mapper>
