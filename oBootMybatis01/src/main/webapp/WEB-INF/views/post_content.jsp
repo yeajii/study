@@ -27,35 +27,39 @@
 				,success	: function(data){
 					console.log(data);
 					
-					table.append(
-						$('<tr></tr>')
-							.append($('<th>No.</th>'))
-							.append($('<th>작성일</th>'))
-							.append($('<th>수정일</th>'))
-							.append($('<th>내용</th>'))
-					);
-					
-					// 테이블 내용
-					$.each(data, function(index, row){
-						console.log("row.commentNo-> " + row.commentNo);
-						console.log("row.commentBody-> " + row.commentBody);
-						
-					    // 새로운 행 생성
-					    var newRow = $('<tr></tr>');
+					if(data != null && data.length > 0){
+						table.append(
+								$('<tr></tr>')
+									.append($('<th>No.</th>'))
+									.append($('<th>작성일</th>'))
+									.append($('<th>수정일</th>'))
+									.append($('<th>내용</th>'))
+							);
+							
+							// 테이블 내용
+							$.each(data, function(index, row){
+								console.log("row.commentNo-> " + row.commentNo);
+								console.log("row.commentBody-> " + row.commentBody);
+								
+							    // 새로운 행 생성
+							    var newRow = $('<tr></tr>');
 
-					    newRow.append($('<td></td>').text(row.commentNo));
-					    newRow.append($('<td></td>').text(row.createDate));
-					    newRow.append($('<td></td>').text(row.modifyDate));
-					    newRow.append($('<td></td>').text(row.commentBody));
+							    newRow.append($('<td></td>').text(row.commentNo));
+							    newRow.append($('<td></td>').text(row.createDate));
+							    newRow.append($('<td></td>').text(row.modifyDate));
+							    newRow.append($('<td></td>').text(row.commentBody));
 
-					    table.append(newRow);
-					});
-					
-						$("#comment-box").append(table);
-					},
-					error: function(e){
-						console.log(e);
+							    table.append(newRow);
+							});
+							
+							$("#comment-box").append(table);
+					}else{
+						console.log("댓글 데이터가 없습니다");
 					}
+				},
+				error: function(e){
+					console.log(e);
+				} 
 			});
 		} 
 	});
