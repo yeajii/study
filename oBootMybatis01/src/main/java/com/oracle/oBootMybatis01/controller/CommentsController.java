@@ -4,10 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -61,6 +59,24 @@ public class CommentsController {
 		
 		return ResponseEntity.ok().body(result);
 	}
+	
+	// 댓글 삭제 
+	@ResponseBody
+	@RequestMapping(value = "deleteComment", method = RequestMethod.POST)
+	public int deleteComment(int postNo, int commentNo) {
+		log.info("deleteComment postNo : {}", postNo);
+		log.info("deleteComment commentNo : {}", commentNo);
+		
+		Comments comments = new Comments();
+		comments.setPostNo(postNo);
+		comments.setCommentNo(commentNo);
+		
+		int deleteComment = cs.deleteComment(comments);
+		log.info("deleteComment deleteComment : {}", deleteComment);
+		
+		return deleteComment;
+	}
+	
 	
 	
 }

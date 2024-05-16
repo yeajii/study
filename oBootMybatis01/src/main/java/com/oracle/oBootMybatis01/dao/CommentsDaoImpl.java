@@ -29,6 +29,7 @@ public class CommentsDaoImpl implements CommentsDao {
 		return selectComment;
 	}
 
+	// 댓글 입력 
 	@Override
 	public int insertComment(Comments comments) {
 
@@ -40,6 +41,20 @@ public class CommentsDaoImpl implements CommentsDao {
 			System.out.println("insertComment Exception-> " + e.getMessage());
 		}
 		return insertComment;
+	}
+
+	// 댓글 삭제 
+	@Override
+	public int deleteComment(Comments comments) {
+
+		int deleteComment = 0;
+		try {
+			deleteComment = session.update("deleteComment", comments);
+			System.out.println("CommentsDaoImpl deleteComment -> " + deleteComment);
+		} catch (Exception e) {
+			System.out.println("deleteComment Exception-> " + e.getMessage());
+		}
+		return deleteComment;
 	}
 	
 	

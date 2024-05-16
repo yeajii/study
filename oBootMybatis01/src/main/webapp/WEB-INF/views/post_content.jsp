@@ -11,8 +11,10 @@
 	$(document).ready(function(){
 		var postNo = ${contentPost.postNo};	
 		
+		// 이벤트 초기화 함수 넣기 
+		
 		// 댓글 리스트
-		commentList();				// 재사용성을 위해 함수 선언 
+		commentList();				
 		function commentList(){
 			$("#comment-box").empty(); 
 			
@@ -47,11 +49,53 @@
 							    newRow.append($('<td></td>').text(row.createDate));
 							    newRow.append($('<td></td>').text(row.modifyDate));
 							    newRow.append($('<td></td>').text(row.commentBody));
-
+							    
+							    // 댓글 삭제 버튼
+							    var deleteBtn = $('<button>삭제</button>');
+							    deleteBtn.attr('value', row.commentNo);		
+							    newRow.append($('<td></td>').append(deleteBtn));
+							   
 							    table.append(newRow);
+							    
+							    // 댓글 삭제 
+							    deleteBtn.on('click', function(){
+							    	var commentNo = $(this).attr('value');	
+							    	console.log("댓글 삭제  commentNo-> " + commentNo);  
+							    	console.log("댓글 삭제  postNo-> " + postNo);
+							    	deleteComment(postNo, commentNo);
+							    });
 							});
 							
 							$("#comment-box").append(table);
+							
+							// 댓글 삭제 
+							function deleteComment(postNo, commentNo){
+								console.log("삭제할 postNo-> " + postNo);
+								console.log("삭제할 commentNo-> " + commentNo);
+								
+								if(confirm("삭제하시겠습니까?")){
+									$.ajax({
+										type 		: 'post'
+										,url 		: 'deleteComment'
+										,data 		: {
+														'postNo' 	 : postNo	
+														,'commentNo' : commentNo
+														}
+										,dataType 	: 'text'
+										,success 	: function(data){
+											if(data == 1){
+												alert("댓글 삭제 완료되었습니다.");
+												commentList(); 			// 댓글 리스트 업데이트
+											}else{
+												alert("댓글 삭제되지 않았습니다.");
+											}
+										}
+									});
+								}else{
+									return false;
+								}
+							}
+							
 					}else{
 						console.log("댓글 데이터가 없습니다");
 					}
@@ -114,8 +158,8 @@
 		console.log("삭제할 글 번호: " + postNo);
 		if(confirm("삭제하시겠습니까?")){
 			$.ajax({
-				url 		: 'deletePost'
-				,type		: 'post'
+				type		: 'post'
+				,url 		: 'deletePost'
 				,data		: {'postNo' : postNo}
 				,dataType 	: 'text'				
 				,success	: function(data){
