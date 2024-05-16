@@ -16,7 +16,7 @@
 	<!-- 댓글 입력  -->
 	<insert id="insertComment" parameterType="Comments">
 		insert into comments (postno , commentno, createdate, commentbody, isdeleted) 
-            	values (#{postNo}, (select nvl(max(commentno), 0) + 1 from comments), sysdate, #{commentBody}, '1')
+            	values (#{postNo}, nvl((select max(commentno) from comments where postno = #{postNo})+1, 1), sysdate, #{commentBody}, '1')
 	</insert>
 
 </mapper>
