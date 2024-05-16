@@ -58,8 +58,8 @@ public class CommentsController {
 		}else {
 			result.put("status", "error");
 		}
+		
 		return ResponseEntity.ok().body(result);
-	    
 	}
 	
 	

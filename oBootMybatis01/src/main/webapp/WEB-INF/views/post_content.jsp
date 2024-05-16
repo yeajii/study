@@ -9,60 +9,12 @@
 <script type="text/javascript">
 	
 	$(document).ready(function(){
-		var postNo = ${contentPost.postNo};	// 공통으로 쓰임
-		
-		// 댓글 입력 
-		var writeComment = $('#comment-write-box');
-		var textarea = $('<textarea>',{
-							type : 'text'
-							,id	: 'comment-write-textarea'
-							,rows : '5'
-							,cols : '65'
-							,placeholder : '댓글을 입력하세요..'
-						});
-		var input = $('<input>',{
-							type : 'button'
-							,id : 'comment-write-btn'
-							,value : '댓글 등록'
-						});
-		writeComment.append(textarea);
-		writeComment.append(input);
-		
-		input.on('click', function(){
-			var commentBody =  textarea.val();
-			console.log("commentBody------> " + commentBody);
-			
-			$.ajax({
-				type 	: 'post'
-				,url 	: 'insertComment'
-				,data 	: {
-						 'commentBody' 	: commentBody
-						 ,'postNo' 		: postNo
-						 ,'random': Math.random() // 랜덤 파라미터 추가
-				}
-				,dataType : 'json'
-				,success: function(data){
-					if(data.status === "success"){ 
-						console.log("댓글이 성공적으로 등록되었습니다.");
-						textarea.val('');	
-					}else{
-						console.error("댓글 등록에 실패했습니다.");
-					}
-				},
-				error: function(e){
-					console.error("댓글 등록 안됨-> ", e);
-				}
-				
-			
-			});
-		});
-		
+		var postNo = ${contentPost.postNo};	
 		
 		// 댓글 리스트
-		createCommentTable();
-		function createCommentTable(){
-			// 여기였음 var postNo = ${contentPost.postNo};
-			console.log("createCommentTable 글 번호 확인: " + postNo);
+		commentList();				// 재사용성을 위해 함수 선언 
+		function commentList(){
+			$("#comment-box").empty(); 
 			
 			var table = $('<table border="1"></table>');
 			
@@ -108,9 +60,54 @@
 					console.log(e);
 				} 
 			});
-		} 
+		}
+		
+		// 댓글 입력 
+		var writeComment = $('#comment-write-box');
+		var textarea = $('<textarea>',{
+							type : 'text'
+							,id	: 'comment-write-textarea'
+							,rows : '5'
+							,cols : '65'
+							,placeholder : '댓글을 입력하세요..'
+						});
+		var input = $('<input>',{
+							type : 'button'
+							,id : 'comment-write-btn'
+							,value : '댓글 등록'
+						});
+		writeComment.append(textarea);
+		writeComment.append(input);
+		
+		input.on('click', function(){
+			var commentBody =  textarea.val();
+			console.log("commentBody------> " + commentBody);
+			
+			$.ajax({
+				type 	: 'post'
+				,url 	: 'insertComment'
+				,data 	: {
+						 'commentBody' 	: commentBody
+						 ,'postNo' 		: postNo
+						}
+				,dataType : 'json'
+				,success: function(data){
+					if(data.status === "success"){ 
+						console.log("댓글이 성공적으로 등록되었습니다.");
+						textarea.val('');	
+						commentList(); 			// 댓글 리스트 업데이트
+					}else{
+						console.error("댓글 등록에 실패했습니다.");
+					}
+				},
+				error: function(e){
+					console.error("댓글 등록 안됨-> ", e);
+				}
+			});
+		});
+		
+		
 	});
-	
 	
 	// 해당 글 삭제
 	function deletePost(postNo){
@@ -135,7 +132,6 @@
 			return false;
 		}
 	}
-	
 	
 </script>
 </head>
