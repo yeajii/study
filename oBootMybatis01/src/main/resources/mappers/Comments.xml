@@ -15,8 +15,26 @@
 
 	<!-- 댓글 입력  -->
 	<insert id="insertComment" parameterType="Comments">
-		insert into comments (postno , commentno, createdate, commentbody, isdeleted) 
-            	values (#{postNo}, nvl((select max(commentno) from comments where postno = #{postNo})+1, 1), sysdate, #{commentBody}, '1')
+		insert into comments (postno 
+							, commentno
+							, createdate
+							, commentbody
+							, isdeleted) 
+	            	values (#{postNo}
+			            	, nvl((select max(commentno) from comments where postno = #{postNo})+1, 1)
+			            	, sysdate
+			            	, #{commentBody}
+			            	, '1')
 	</insert>
+	
+	
+	<!-- 댓글 삭제 -->
+	<update id="deleteComment" parameterType="Comments">
+		update 	comments 
+		set 	isdeleted = '0' 
+		where 	postno = #{postNo} 
+		and 	commentno = #{commentNo}
+	</update>
+
 
 </mapper>
