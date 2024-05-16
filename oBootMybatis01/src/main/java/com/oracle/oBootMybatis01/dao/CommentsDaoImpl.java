@@ -17,16 +17,29 @@ public class CommentsDaoImpl implements CommentsDao {
 
 	// 해당 글 댓글
 	@Override
-	public List<Comments> commentSelect(int postNo) {
+	public List<Comments> selectComment(int postNo) {
 	
-		List<Comments> commentSelect = null;
+		List<Comments> selectComment = null;
 		try {
-			commentSelect = session.selectList("commentSelect", postNo);
-			System.out.println("CommentsDaoImpl commentSelect -> " + commentSelect);
+			selectComment = session.selectList("selectComment", postNo);
+			System.out.println("CommentsDaoImpl selectComment -> " + selectComment);
 		} catch (Exception e) {
-			System.out.println("commentSelect Exception-> " + e.getMessage());
+			System.out.println("selectComment Exception-> " + e.getMessage());
 		}
-		return commentSelect;
+		return selectComment;
+	}
+
+	@Override
+	public int insertComment(Comments comments) {
+
+		int insertComment = 0;
+		try {
+			insertComment = session.insert("insertComment", comments);
+			System.out.println("CommentsDaoImpl insertComment -> " + insertComment);
+		} catch (Exception e) {
+			System.out.println("insertComment Exception-> " + e.getMessage());
+		}
+		return insertComment;
 	}
 	
 	

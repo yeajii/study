@@ -17,11 +17,19 @@ public class CommentsServiceImpl implements CommentsService {
 
 	// 해당 글 댓글
 	@Override
-	public List<Comments> commentSelect(int postNo) {
-		List<Comments> commentSelect = cd.commentSelect(postNo);
-		System.out.println("CommentsServiceImpl commentSelect.size()-> " + commentSelect.size());
+	public List<Comments> selectComment(int postNo) {
+		List<Comments> selectComment = cd.selectComment(postNo);
+		System.out.println("CommentsServiceImpl selectComment.size()-> " + selectComment.size());
 		
-		return commentSelect;
+		return selectComment;
+	}
+
+	@Override
+	public int insertComment(Comments comments) {
+		int insertComment = cd.insertComment(comments);
+		System.out.println("CommentsServiceImpl insertComment-> " + insertComment);
+		
+		return insertComment;
 	}
 
 	

@@ -4,11 +4,19 @@
 
 <mapper namespace="com.oracle.oBootMybatis01.CommentsMapper">
 	
-	<select id="commentSelect" parameterType="int" resultType="Comments">
+	<!-- 해당 글 댓글 -->
+	<select id="selectComment" parameterType="int" resultType="Comments">
 		select 	*
 		from 	comments
 		where 	postno = #{postno}
 		and 	isdeleted = '1'
 	</select>
+
+
+	<!-- 댓글 입력  -->
+	<insert id="insertComment" parameterType="Comments">
+		insert into comments (postno , commentno, createdate, commentbody, isdeleted) 
+            	values (#{postNo}, (select nvl(max(commentno), 0) + 1 from comments), sysdate, #{commentBody}, '1')
+	</insert>
 
 </mapper>

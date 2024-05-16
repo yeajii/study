@@ -9,19 +9,66 @@
 <script type="text/javascript">
 	
 	$(document).ready(function(){
+		var postNo = ${contentPost.postNo};	// 공통으로 쓰임
 		
+		// 댓글 입력 
+		var writeComment = $('#comment-write-box');
+		var textarea = $('<textarea>',{
+							type : 'text'
+							,id	: 'comment-write-textarea'
+							,rows : '5'
+							,cols : '65'
+							,placeholder : '댓글을 입력하세요..'
+						});
+		var input = $('<input>',{
+							type : 'button'
+							,id : 'comment-write-btn'
+							,value : '댓글 등록'
+						});
+		writeComment.append(textarea);
+		writeComment.append(input);
+		
+		input.on('click', function(){
+			var commentBody =  textarea.val();
+			console.log("commentBody------> " + commentBody);
+			
+			$.ajax({
+				type 	: 'post'
+				,url 	: 'insertComment'
+				,data 	: {
+						 'commentBody' 	: commentBody
+						 ,'postNo' 		: postNo
+						 ,'random': Math.random() // 랜덤 파라미터 추가
+				}
+				,dataType : 'json'
+				,success: function(data){
+					if(data.status === "success"){ 
+						console.log("댓글이 성공적으로 등록되었습니다.");
+						textarea.val('');	
+					}else{
+						console.error("댓글 등록에 실패했습니다.");
+					}
+				},
+				error: function(e){
+					console.error("댓글 등록 안됨-> ", e);
+				}
+				
+			
+			});
+		});
+		
+		
+		// 댓글 리스트
 		createCommentTable();
-		
-		// 댓글 
 		function createCommentTable(){
-			var postNo = ${contentPost.postNo};
-			console.log("글 번호 확인: " + postNo);
+			// 여기였음 var postNo = ${contentPost.postNo};
+			console.log("createCommentTable 글 번호 확인: " + postNo);
 			
 			var table = $('<table border="1"></table>');
 			
 			$.ajax({
-				url			: 'commentSelect'
-				,type		: 'get'
+				type		: 'get'
+				,url		: 'selectComment'
 				,data		: {'postNo' : postNo}
 				,dateType	: 'json'
 				,success	: function(data){
@@ -109,7 +156,10 @@
 		</tr>
 	</table><p>
 
-	<!-- 댓글 -->
+	<!-- 댓글 입력 -->
+	<div id="comment-write-box"></div>
+
+	<!-- 댓글 리스트 -->
 	<div id="comment-box"></div>
 
 </body>
