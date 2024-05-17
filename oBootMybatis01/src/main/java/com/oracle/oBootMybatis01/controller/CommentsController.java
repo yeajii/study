@@ -1,14 +1,13 @@
 package com.oracle.oBootMybatis01.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.oracle.oBootMybatis01.model.Comments;
@@ -37,27 +36,17 @@ public class CommentsController {
 	}
 	
 	// 댓글 입력 
-	@RequestMapping(value = "insertComment", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, String>> insertComment(@RequestParam("commentBody") String commentBody,
-															@RequestParam("postNo") int postNo) {
-		log.info("insertComment commentBody : {}", commentBody);
-		log.info("insertComment postNo : {}", postNo);
-		
-		Comments comments = new Comments();
-		comments.setCommentBody(commentBody);
-		comments.setPostNo(postNo);
+	@ResponseBody						// 요청으로 전송된 미디어 타입 지정 : 클라이언트가 전송한 데이터가 json 형식임을 명시
+	@PostMapping(value = "insertComment", consumes = "application/json")	
+	public ResponseEntity<?> insertComment(@RequestBody Comments comments) {
+		log.info("insertComment commentBody : {}", comments.getCommentBody());
+		log.info("insertComment postNo : {}", comments.getPostNo());
 		
 		int insertComment = cs.insertComment(comments);
 		log.info("insertComment insertComment : {}", insertComment);
 		
-		Map<String, String> result = new HashMap<String, String>();
-		if(insertComment == 1) {
-			result.put("status", "success");
-		}else {
-			result.put("status", "error");
-		}
-		
-		return ResponseEntity.ok().body(result);
+		// 상태 코드 200(OK)와 함께 정수 값 1을 응답 본문으로 반환
+		return ResponseEntity.ok(insertComment);	
 	}
 	
 	// 댓글 삭제 

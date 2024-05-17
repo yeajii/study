@@ -13,8 +13,9 @@
 		
 		// 이벤트 초기화 함수 넣기 
 		
-		// 댓글 리스트
-		commentList();				
+		// 함수 
+		commentList();	// 댓글 리스트			
+		
 		function commentList(){
 			$("#comment-box").empty(); 
 			
@@ -128,15 +129,16 @@
 			console.log("commentBody------> " + commentBody);
 			
 			$.ajax({
-				type 	: 'post'
-				,url 	: 'insertComment'
-				,data 	: {
-						 'commentBody' 	: commentBody
-						 ,'postNo' 		: postNo
-						}
-				,dataType : 'json'
-				,success: function(data){
-					if(data.status === "success"){ 
+				type 		: 'post'
+				,url 		: 'insertComment'
+				,contentType: 'application/json'
+				,data 		: JSON.stringify({					// JavaScript 객체를 JSON 문자열로 변환
+								 'commentBody' 	: commentBody
+								 ,'postNo' 		: postNo
+								})
+				,dataType 	: 'text'
+				,success	: function(data){
+					if(data === "1"){ 
 						console.log("댓글이 성공적으로 등록되었습니다.");
 						textarea.val('');	
 						commentList(); 			// 댓글 리스트 업데이트
