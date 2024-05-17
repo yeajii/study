@@ -44,14 +44,6 @@
 		$('#close-btn').on('click', function(){
 			location.href = 'start';
 		});
-		
-		$('#update-btn').on('click', function(){
-			location.href = 'updatePost?postNo=' + postNo;
-		});
-		
-		$('#delete-btn').on('click', function(){
-			deletePost(postNo);
-		});
 	}	
 	
 	// 댓글 리스트	
@@ -216,8 +208,8 @@
 		<tr>  
 			<td>
 				<input type="button" id="close-btn" value="닫기">
-				<input type="button" id="update-btn" value="수정">
-				<input type="button" id="delete-btn" value="삭제">		
+				<input type="button" value="수정" onclick="location.href='updatePost?postNo=${contentPost.postNo}'">
+				<input type="button" value="삭제" onclick="deletePost(${contentPost.postNo})">			
 			</td>
 		</tr>
 	</table><p>
