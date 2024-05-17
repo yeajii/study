@@ -1,10 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>	<!-- jquery 사용하기 위해 head 안에 CDN 추가 -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> <!-- jquery 사용하기 위해 head 안에 CDN 추가 -->
 <title>Insert title here</title>
 <script type="text/javascript">
 
@@ -12,11 +12,8 @@
 		var postNo = ${contentPost.postNo};	
 		console.log("$(document).ready(function() 에서 postNo ?? " + postNo);
 		
-		// 이벤트 초기화 함수 
-		initEvent();
-		
-		// 댓글 리스트
-		commentList(postNo);		
+		initEvent();			// 이벤트 초기화 함수 
+		commentList(postNo);	// 댓글 리스트
 		
 		// 댓글 입력 
 		var writeComment = $('#comment-write-box');
@@ -38,7 +35,7 @@
 		input.on('click', function(){
 			insertComment(postNo); 
 		});
-	});
+	});	
 		
 	function initEvent(){
 		$('#close-btn').on('click', function(){
@@ -199,20 +196,33 @@
 </head>
 <body>
 	<h1>Content Page</h1>
-	
+
 	<table border="1">
-		<tr> <th>No.</th> <td>${contentPost.postNo}</td> </tr>
-		<tr> <th>작성일</th> <td>${contentPost.createDate}</td> </tr>
-		<tr> <th>제목</th> <td>${contentPost.postName}</td> </tr>
-		<tr> <th>내용</th> <td style="width: 70%;">${contentPost.postContent}</td> </tr>
-		<tr>  
+		<tr>
+			<th>No.</th>
+			<td>${contentPost.postNo}</td>
+		</tr>
+		<tr>
+			<th>작성일</th>
+			<td>${contentPost.createDate}</td>
+		</tr>
+		<tr>
+			<th>제목</th>
+			<td>${contentPost.postName}</td>
+		</tr>
+		<tr>
+			<th>내용</th>
+			<td style="width: 70%;">${contentPost.postContent}</td>
+		</tr>
+		<tr>
 			<td>
-				<input type="button" id="close-btn" value="닫기">
+				<input type="button" id="close-btn" value="닫기"> 
 				<input type="button" value="수정" onclick="location.href='updatePost?postNo=${contentPost.postNo}'">
-				<input type="button" value="삭제" onclick="deletePost(${contentPost.postNo})">			
+				<input type="button" value="삭제" onclick="deletePost(${contentPost.postNo})">
 			</td>
 		</tr>
-	</table><p>
+	</table>
+	<p>
 
 	<!-- 댓글 입력 -->
 	<div id="comment-write-box"></div>
