@@ -13,17 +13,7 @@
 		console.log("$(document).ready(function() 에서 postNo ?? " + postNo);
 		
 		// 이벤트 초기화 함수 
-		$('#close-btn').on('click', function(){
-			location.href = 'start';
-		});
-		
-		$('#update-btn').on('click', function(){
-			location.href = 'updatePost?postNo=' + postNo;
-		});
-		
-		$('#delete-btn').on('click', function(){
-			deletePost(postNo);
-		});
+		initEvent();
 		
 		// 댓글 리스트
 		commentList(postNo);		
@@ -49,6 +39,20 @@
 			insertComment(postNo); 
 		});
 	});
+		
+	function initEvent(){
+		$('#close-btn').on('click', function(){
+			location.href = 'start';
+		});
+		
+		$('#update-btn').on('click', function(){
+			location.href = 'updatePost?postNo=' + postNo;
+		});
+		
+		$('#delete-btn').on('click', function(){
+			deletePost(postNo);
+		});
+	}	
 	
 	// 댓글 리스트	
 	function commentList(postNo){
