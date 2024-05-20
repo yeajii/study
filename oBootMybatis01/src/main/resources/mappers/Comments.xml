@@ -6,10 +6,11 @@
 	
 	<!-- 해당 글 댓글 -->
 	<select id="selectComment" parameterType="int" resultType="Comments">
-		select 	*
-		from 	comments
-		where 	postno = #{postno}
-		and 	isdeleted = '1'
+		select 		*
+		from 		comments
+		where 		postno = #{postno}
+		and 		isdeleted = '1'
+		order by 	commentno asc
 	</select>
 
 

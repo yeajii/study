@@ -8,6 +8,7 @@
 			
 		<typeAlias alias="Post"   		type="com.oracle.oBootMybatis01.model.Post"/>
 		<typeAlias alias="Comments"   	type="com.oracle.oBootMybatis01.model.Comments"/>
+		<typeAlias alias="Todo"   		type="com.oracle.oBootMybatis01.model.Todo"/>
 	
 	</typeAliases>
 			

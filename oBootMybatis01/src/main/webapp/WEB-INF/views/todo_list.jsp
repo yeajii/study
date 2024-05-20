@@ -1,3 +1,5 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -5,7 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<a href="/start">Board</a><p>
-	<a href="/todo">TodoList</a>
+	<h1>TodoList Page</h1>
 </body>
 </html>

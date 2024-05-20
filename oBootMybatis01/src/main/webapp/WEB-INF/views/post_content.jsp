@@ -9,37 +9,49 @@
 <script type="text/javascript">
 
 	$(document).ready(function(){
-		var postNo = ${contentPost.postNo};	
-		console.log("$(document).ready(function() 에서 postNo ?? " + postNo);
+		var postNo;						// 전역변수 남발하지 않기 위해 캡슐화 (즉시 호출 함수 표현식, IIFE)
 		
-		initEvent();			// 이벤트 초기화 함수 
-		commentList(postNo);	// 댓글 리스트
+		initData();				
+		initEvent();			
+	});	
+		
+	function initData(){
+		postNo = ${contentPost.postNo};	// 전역변수 
+		console.log("initData의 postNo-> " + postNo);
+		
+	/*	다시 해보기 
+		if (postNo == null) {
+	        window.location.href = 'error.jsp';
+	        return; // 추가적인 코드 실행을 막기 위해 return
+	    } */ 
+		
+ 		commentList(postNo);	// 댓글 리스트
 		
 		// 댓글 입력 
 		var writeComment = $('#comment-write-box');
 		var textarea = $('<textarea>',{
-							type : 'text'
-							,id	: 'comment-write-textarea'
-							,rows : '5'
-							,cols : '65'
+							type 	: 'text'
+							,id		: 'comment-write-textarea'
+							,rows 	: '5'
+							,cols 	: '65'
 							,placeholder : '댓글을 입력하세요..'
 						});
 		var input = $('<input>',{
-							type : 'button'
-							,id : 'comment-write-btn'
-							,value : '댓글 등록'
+							type 	: 'button'
+							,id 	: 'comment-write-btn'
+							,value 	: '댓글 등록'
 						});
 		writeComment.append(textarea);
 		writeComment.append(input);
-		
-		input.on('click', function(){
-			insertComment(postNo); 
-		});
-	});	
+	}	
 		
 	function initEvent(){
 		$('#close-btn').on('click', function(){
 			location.href = 'start';
+		});
+		
+		$('#comment-write-btn').on('click', function(){
+			insertComment(postNo); 
 		});
 	}	
 	
@@ -53,51 +65,58 @@
 			type		: 'get'
 			,url		: 'selectComment'
 			,data		: {'postNo' : postNo}
-			,dateType	: 'json'
-			,success	: function(data){
-			console.log(data);
+			,dataType	: 'json'
+			,success	: function(data){  
+				console.log(data);
+			
+	            $("#no-comments").remove();			// '현재 댓글이 없습니다' 제거  
 				
-			if(data != null && data.length > 0){
-				table.append(
-						$('<tr></tr>')
-							.append($('<th>No.</th>'))
-							.append($('<th>작성일</th>'))
-							.append($('<th>수정일</th>'))
-							.append($('<th>내용</th>'))
-				);
-					
-				// 테이블 내용
-				$.each(data, function(index, row){
-					console.log("row.commentNo-> " + row.commentNo);
-					console.log("row.commentBody-> " + row.commentBody);
-					
-				    // 새로운 행 생성
-				    var newRow = $('<tr></tr>');
-
-				    newRow.append($('<td></td>').text(row.commentNo));
-				    newRow.append($('<td></td>').text(row.createDate));
-				    newRow.append($('<td></td>').text(row.modifyDate));
-				    newRow.append($('<td></td>').text(row.commentBody));
-				    
-				    // 댓글 삭제 버튼
-				    var deleteBtn = $('<button>삭제</button>');
-				    deleteBtn.attr('value', row.commentNo);		
-				    newRow.append($('<td></td>').append(deleteBtn));
-				   
-				    table.append(newRow);
-				    
-				    // 댓글 삭제 
-				    deleteBtn.on('click', function(){
-				    	var commentNo = $(this).attr('value');	
-				    	console.log("댓글 삭제  commentNo-> " + commentNo);  
-				    	console.log("댓글 삭제  postNo-> " + postNo);
-				    	deleteComment(postNo, commentNo);
-				    });
-				});
-					
-				$("#comment-box").append(table);
-			}else{
-					console.log("댓글 데이터가 없습니다");
+				if(data != null && data.length > 0){
+					table.append(
+							$('<tr></tr>')
+								.append($('<th>No.</th>'))
+								.append($('<th>작성일</th>'))
+								.append($('<th>수정일</th>'))
+								.append($('<th>내용</th>'))
+					);
+						
+					// 테이블 내용
+					$.each(data, function(index, row){
+						console.log("row.commentNo-> " + row.commentNo);
+						console.log("row.commentBody-> " + row.commentBody);
+						
+					    // 새로운 행 생성
+					    var newRow = $('<tr></tr>');
+	
+					    newRow.append($('<td></td>').text(row.commentNo));
+					    newRow.append($('<td></td>').text(row.createDate));
+					    newRow.append($('<td></td>').text(row.modifyDate));
+					    newRow.append($('<td></td>').text(row.commentBody));
+					    
+					    // 댓글 삭제 버튼
+					    var deleteBtn = $('<button>삭제</button>');
+					    // var deleteBtnId = 'deleteBtn_' + row.commentNo; 	// 댓글 번호를 기반으로 고유한 ID 생성
+					    // deleteBtn.attr('id', deleteBtnId); 				// 고유한 ID를 삭제 버튼에 할당
+					    deleteBtn.attr('value', row.commentNo);		
+					    newRow.append($('<td></td>').append(deleteBtn));
+					   
+					    table.append(newRow);
+					    
+					    // 댓글 삭제	 initEvent에 빼면 --> deleteBtnId가 commentList 함수 안에 있어서 인식 안돼서 이벤트 발생 안함 
+					    deleteBtn.on('click', function(){
+					    	var commentNo = $(this).attr('value');	
+					    	console.log("댓글 삭제  commentNo-> " + commentNo);  
+					    	console.log("댓글 삭제  postNo-> " + postNo);
+					    	deleteComment(postNo, commentNo);
+					    });  
+					});
+						
+					$("#comment-box").append(table);
+				}else{
+					var noComment = $('<div id="no-comments"></div>');
+					noComment.text("현재 댓글이 없습니다");
+					$('body').append(noComment);
+					console.log("현재 댓글이 없습니다");
 				}
 			},
 			error: function(e){
@@ -120,7 +139,7 @@
 			type 		: 'post'
 			,url 		: 'insertComment'
 			,contentType: 'application/json'
-			,data 		: JSON.stringify({					// JavaScript 객체를 JSON 문자열로 변환
+			,data 		: JSON.stringify({					// 문자열을 JOSN으로 변환
 							 'commentBody' 	: commentBody
 							 ,'postNo' 		: postNo
 							})
@@ -229,6 +248,6 @@
 
 	<!-- 댓글 리스트 -->
 	<div id="comment-box"></div>
-
+	
 </body>
 </html>
