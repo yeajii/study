@@ -28,7 +28,7 @@ public class PostController {
 	// 전체 리스트 
 	@RequestMapping(value = "start")
 	public String selectPost(Model model) {
-		System.out.println("------------------------------");
+		System.out.println("------------- start -----------------");
 		
 		// 전체 리스트 갯수
 		int postListTotalCount = ps.postListTotalCount();
