@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -38,6 +39,57 @@ public class TodoController {
 		return selectTodoList;
 	}
 	
+	// 완료  (N -> Y)
+	@ResponseBody
+	@PostMapping(value = "doneTodo")
+	public int doneTodo(int todoNo, String todoCheck) {
+		log.info("doneTodo todoNo: {}" , todoNo);
+		log.info("doneTodo todoCheck: {}" , todoCheck);
+		
+		if("true".equals(todoCheck)) {
+			todoCheck = "Y";
+		}else {
+			todoCheck = "N";
+		}
+		
+		Todo todo = new Todo();
+		todo.setTodo_no(todoNo);
+		todo.setTodo_check(todoCheck);
+		
+		int doneTodo = ts.doneTodo(todo);
+		log.info("doneTodo : {}" , doneTodo);
+		
+		return doneTodo;
+	}
 	
+	// 삭제  (N -> Y)
+	@ResponseBody
+	@PostMapping(value = "deleteTodo")
+	public int deleteTodo(int todoNo) {
+		log.info("deleteTodo todoNo: {}", todoNo);
+		
+		int deleteTodo = ts.deleteTodo(todoNo);
+		log.info("deleteTodo : {}", deleteTodo);
+		
+		return deleteTodo;
+	}
 
+	// 입력
+	@ResponseBody
+	@PostMapping(value = "addTodo")
+	public int addTodo(String todoContent, int todoPriority) {
+		log.info("addTodo todoContent: {}", todoContent);
+		log.info("addTodo todoPriority: {}", todoPriority);
+		
+		Todo todo = new Todo();
+		todo.setTodo_content(todoContent);
+		todo.setTodo_priority(todoPriority);
+		
+		int addTodo = ts.addTodo(todo);
+		log.info("addTodo : {}", addTodo);
+		
+		return addTodo;
+	}
+	
+	
 }

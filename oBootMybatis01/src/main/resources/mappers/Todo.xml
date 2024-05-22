@@ -8,7 +8,31 @@
 	<select id="selectTodoList" resultType="Todo">
 		select      *
 		from        todo
+		where		use_yn = 'N'
 		order by    todo_no asc
 	</select>
+	
+	
+	<!-- 완료  (N -> Y) -->
+	<update id="doneTodo" parameterType="Todo">
+		update  	todo 
+		set     	todo_check 	= #{todo_check}
+		where   	todo_no 	= #{todo_no}
+	</update>
+	
+	
+	<!-- 삭제  (N -> Y) -->
+	<update id="deleteTodo" parameterType="int">
+		update  	todo 
+		set     	use_yn 	= 'Y'
+		where   	todo_no = #{todo_no}
+	</update>
+	
+	
+	<!-- 입력 -->
+	<insert id="addTodo" parameterType="Todo">
+		insert into todo (todo_no, todo_content, todo_priority) 
+				VALUES  (TODO_SEQUENCE.nextval, #{todo_content}, #{todo_priority})
+	</insert>
 
 </mapper>
