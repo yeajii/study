@@ -58,7 +58,7 @@
 	}
 	
 	function todoInput(){
-		var todoInsertBox = $('#todo-insert-box');
+		var todoInputBox = $('#todo-input-box');
 		var divBox = $('<div></div>');
 		var todo = $('<input>',{
 						type 			: 	'text'
@@ -124,7 +124,7 @@
 	    divBox.append(addBtn);
 	    divBox.append(cancelBtn);
 	    
-	    todoInsertBox.append(divBox); 
+	    todoInputBox.append(divBox); 
 	}
 	
 	function todoList(){
@@ -135,8 +135,8 @@
 			,success 	: 	function(data){
 				console.log(data);
 				
-				var todoCheckBox = $('#todo-check-box');
-				todoCheckBox.empty(); 
+				var todoListBox = $('#todo-list-box');
+				todoListBox.empty(); 
 			
 				data.forEach(function(todo){
 					var divCheckBox = $('<div id="div-check-box"></div>');
@@ -168,7 +168,7 @@
                     divCheckBox.append(doneBtn);
                     divCheckBox.append(deleteBtn);
                     
-                    todoCheckBox.append(divCheckBox);
+                    todoListBox.append(divCheckBox);
                     
                     // 완료  - 체크박스 선택 안할 시 알림창 
                     doneBtn.on('click', function(){	
@@ -217,7 +217,7 @@
 					console.log("addTodo 성공");
 					$('#input-todo').val('');
 					$('input[name = todo_priority]').prop('checked', false);
-					showTodoMiddle();
+					todoList();
 				}else{
 					alert('입력 처리 실패');
 				}
@@ -238,7 +238,7 @@
 				,success 	: function(data){
 					if(data === "1"){
 						console.log("doneTodo 성공");
-						showTodoMiddle();
+						todoList();
 					}else{
 						alert('완료 처리 실패');
 					}
@@ -259,7 +259,7 @@
 				,success	:	function(data){
 					if(data === "1"){
 						console.log("deleteTodo 성공");
-						showTodoMiddle();
+						todoList();
 					}else{
 						alert('삭제 처리 실패');
 					}
@@ -275,8 +275,8 @@
 <body>
 	<div id="todo-out-box" class="col-md-3">
 		<h3>TODOLIST</h3>
-			<div id="todo-insert-box"></div>
-			<div id="todo-check-box"></div>
+			<div id="todo-input-box"></div>
+			<div id="todo-list-box"></div>
 	</div>
 </body>
 </html>
