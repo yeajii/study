@@ -185,7 +185,8 @@
 			,success	:	function(data){
 				if(data === "1"){
 					console.log("addTodo 성공");
-					todo.val('');
+					$('#input-todo').val('');
+					$('input[name = todo_priority]').prop('checked', false);
 					showTodoMiddle();
 				}else{
 					alert('입력 처리 실패');
