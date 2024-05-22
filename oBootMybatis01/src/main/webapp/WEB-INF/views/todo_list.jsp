@@ -40,7 +40,7 @@
 <script type="text/javascript">
 
 	$(function(){
-		initData();		// 필요한 정보 불러오는 함수 
+		initData();		
 		initEvent();
 	});
 	
@@ -53,11 +53,11 @@
 	}
 	
 	function initData(){
-		showTodoTop();	// 어떤 함수인지 
-		showTodoMiddle();
+		todoInput();	
+		todoList();
 	}
 	
-	function showTodoTop(){
+	function todoInput(){
 		var todoInsertBox = $('#todo-insert-box');
 		var divBox = $('<div></div>');
 		var todo = $('<input>',{
@@ -127,7 +127,7 @@
 	    todoInsertBox.append(divBox); 
 	}
 	
-	function showTodoMiddle(){
+	function todoList(){
 		$.ajax({
 			type 		: 	'get'
 			,url 		: 	'selectTodoList'
@@ -170,8 +170,8 @@
                     
                     todoCheckBox.append(divCheckBox);
                     
-                    // 완료  - 체크박스 선택 안할 시 알림창 , 밑줄 그어지면서 맨 아래로 내려가도록 하기 
-                    doneBtn.on('click', function(){	// id 사용해서 이벤트 함수에 넣기
+                    // 완료  - 체크박스 선택 안할 시 알림창 
+                    doneBtn.on('click', function(){	
                     	var todoNo = $(this).attr('name');
                     	var isChecked = checkBox.is(':checked');		// checked이면 true 아니면 false 반환
                     	console.log("todoNo-> " + todoNo + ", isChecked-> " + isChecked);
@@ -184,7 +184,7 @@
                     });
                     
                     // 삭제 - 체크박스 선택 안할 시 알림창 
-                    deleteBtn.on('click', function(){	// id 사용해서 이벤트 함수에 넣기 
+                    deleteBtn.on('click', function(){	
                     	var todoNo = $(this).attr('name');
                     	var isChecked = checkBox.is(':checked');
                     	console.log("todoNo-> " + todoNo + ", isChecked-> " + isChecked);
