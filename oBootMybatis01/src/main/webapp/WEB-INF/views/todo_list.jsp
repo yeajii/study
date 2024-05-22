@@ -3,44 +3,69 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> <!-- jquery 사용하기 위해 head 안에 CDN 추가 -->
-<title>Insert title here</title>
-<style type="text/css">
-	/* 우선순위에 따라 글자 색 변경 */
-
-</style>
-<script type="text/javascript">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Insert title here</title>
 	
+	<!-- Bootstrap CSS (스타일 적용) -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+	
+	<!-- jQuery -->
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	
+	<!-- Bootstrap JS (동적 기능) -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    
+    <style type="text/css"> /* 우선순위에 따라 글자 색 변경하기*/
+		.form-control{margin-bottom: 10px;}
+		
+		.radio-btn-label {margin-left: 5px;
+    					margin-right: 5px;}
+    					
+    	.col-md-3{background-color: #FAF4C0}				
+    				
+    	#delete-btn{position: absolute;
+    					right: 5px;}			
+    					
+		#done-btn{position: absolute;
+					right: 90px;}				
+    		
+		#div-check-box{margin-bottom: 10px;}
+		
+		#add-btn{margin-right: 10px;
+				margin-bottom: 15px;}
+				
+		#cancel-btn{margin-bottom: 15px;}		
+	</style>
+<script type="text/javascript">
+
 	$(function(){
-		initData();
-		initEvnet();
+		initData();		// 필요한 정보 불러오는 함수 
+		initEvent();
 	});
 	
-	function initEvnet(){
-		$('#input-todo').on('click', function(){
-			$('#input-todo').val("");
-		});
-		
-		$('#cancel-btn').on('click', function(){
-			$('input:radio[name="priority"]').prop('checked', false);	
-			$('#input-todo').val("");									
-		});
+	function initEvent(){
+		// 이벤트 위임을 사용하여 동적으로 생성된 #cancel-btn 요소에 핸들러 적용
+		$(document).on('click', '#cancel-btn', function(){
+	        $('input:radio[name="todo_priority"]').prop('checked', false);	
+	        $('#input-todo').val("");									
+	    });
 	}
 	
 	function initData(){
-		showTodoTop();
+		showTodoTop();	// 어떤 함수인지 
 		showTodoMiddle();
 	}
 	
 	function showTodoTop(){
-		var todoBox = $('#todo-box');
+		var todoInsertBox = $('#todo-insert-box');
 		var divBox = $('<div></div>');
 		var todo = $('<input>',{
 						type 			: 	'text'
 						,id				: 	'input-todo'
 						,placeholder	: 	'new todo'
 						,name			: 	'todo_content'
+						,class			:	"form-control"
 					});
 		var priorities = [
 	        {id: 'todo-check-top'	, value: '1', text: '상'},
@@ -50,14 +75,15 @@
 		
 		priorities.forEach(function(priority){
 			var radioBtn = $('<input>', {
-				            type	: 	'radio',
-				            id		: 	priority.id,
-				            name	: 	'todo_priority',		// 동일한 name 속성을 가진 라디오 버튼들은 하나의 그룹
-				            value	: 	priority.value			// 서버로 전송 
+				            type	: 	'radio'
+				            ,id		: 	priority.id
+				            ,name	: 	'todo_priority'			// 동일한 name 속성을 가진 라디오 버튼들은 하나의 그룹
+				            ,value	: 	priority.value			// 서버로 전송 
 				        });
 			 var radioBtnLabel = $('<label>', {
-				            for		: 	priority.id,			// <input> id와 연결
-				            text	: 	priority.text			// 라벨의 텍스트 내용(상,중,하)
+				            for		: 	priority.id				// <input> id와 연결
+				            ,text	: 	priority.text			// 라벨의 텍스트 내용(상,중,하)
+				            ,class	:	'radio-btn-label'
 				        });
 			 
 			 divBox.append(radioBtn).append(radioBtnLabel); 	// 라디오 버튼과 라벨을 반복문 내에서 divBox에 추가해야 된다 
@@ -67,6 +93,7 @@
 						type 	:	'button'
 						,id 	:	'add-btn'
 						,value 	:	'add'
+						,class	: 	"btn btn-secondary btn-sm"
 					}).click(function(){
 						var todoContent = $('#input-todo').val();
 						var todoPriority = $('input[name = todo_priority]:checked').val();
@@ -89,14 +116,15 @@
 		var cancelBtn = $('<input>',{
 						type 	: 	'button'
 						,id 	: 	'cancel-btn'
-						,value 	: 	'취소'
+						,value 	: 	'입력 취소'
+						,class	:	"btn btn-light btn-sm"
 					});
 		
 		divBox.append(todo);
 	    divBox.append(addBtn);
 	    divBox.append(cancelBtn);
 	    
-	    todoBox.append(divBox); 
+	    todoInsertBox.append(divBox); 
 	}
 	
 	function showTodoMiddle(){
@@ -111,7 +139,7 @@
 				todoCheckBox.empty(); 
 			
 				data.forEach(function(todo){
-					var divCheckBox = $('<div></div>');
+					var divCheckBox = $('<div id="div-check-box"></div>');
 					var checkBox = $('<input>',{
 									type		: 	'checkbox'
 									,name 		: 	'todo_check'
@@ -125,12 +153,14 @@
 									,id 	: 'done-btn'
 									,name 	: todo.todo_no
 									,value 	: '완료'
+									,class	: "btn btn-outline-secondary btn-sm"
 								});
 					var deleteBtn = $('<input>',{
 									type	: 'button'
 									,id 	: 'delete-btn'
 									,name 	: todo.todo_no
 									,value 	: '삭제'
+									,class	: "btn btn-outline-secondary btn-sm"
 								});
 
                     divCheckBox.append(checkBox);
@@ -141,7 +171,7 @@
                     todoCheckBox.append(divCheckBox);
                     
                     // 완료  - 체크박스 선택 안할 시 알림창 , 밑줄 그어지면서 맨 아래로 내려가도록 하기 
-                    doneBtn.on('click', function(){
+                    doneBtn.on('click', function(){	// id 사용해서 이벤트 함수에 넣기
                     	var todoNo = $(this).attr('name');
                     	var isChecked = checkBox.is(':checked');		// checked이면 true 아니면 false 반환
                     	console.log("todoNo-> " + todoNo + ", isChecked-> " + isChecked);
@@ -154,7 +184,7 @@
                     });
                     
                     // 삭제 - 체크박스 선택 안할 시 알림창 
-                    deleteBtn.on('click', function(){
+                    deleteBtn.on('click', function(){	// id 사용해서 이벤트 함수에 넣기 
                     	var todoNo = $(this).attr('name');
                     	var isChecked = checkBox.is(':checked');
                     	console.log("todoNo-> " + todoNo + ", isChecked-> " + isChecked);
@@ -243,9 +273,10 @@
 </script>
 </head>
 <body>
-	<h1>TODOLIST</h1>
-	
-	<div id="todo-box"></div>
-	<div id="todo-check-box"></div>
+	<div id="todo-out-box" class="col-md-3">
+		<h3>TODOLIST</h3>
+			<div id="todo-insert-box"></div>
+			<div id="todo-check-box"></div>
+	</div>
 </body>
 </html>
