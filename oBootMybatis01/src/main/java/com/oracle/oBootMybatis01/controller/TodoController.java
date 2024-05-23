@@ -20,6 +20,13 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class TodoController {
 	
+	// chart --------------------------------------------------------
+	@RequestMapping(value = "chart")
+	public String chart() {
+		return "chart";
+	}
+	//----------------------------------------------------------------
+	
 	private final TodoService ts;
 	
 	@RequestMapping(value = "todoList")
