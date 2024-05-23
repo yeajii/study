@@ -53,12 +53,31 @@
 	}
 	
 	function initData(){
+		createTodoOutBox();
 		todoInput();	
 		todoList();
 	}
 	
+	function createTodoOutBox(){
+		// 존재하는지 확인하고, 존재하면 반환
+		var existingBox = $('#todo-out-box');
+		if(existingBox.length > 0){
+			return existingBox;
+		}
+		
+		// 존재하지 않으면 새로 생성하고 반환
+		var newBox = $('<div id="todo-out-box" class="col-md-3"></div>');
+		$('body').append(newBox);
+		return newBox; 
+	}
+	
 	function todoInput(){
+		var todoOutBox = createTodoOutBox();
+		
 		var todoInputBox = $('#todo-input-box');
+		if(todoInputBox.length === 0){
+			todoInputBox = $('<div id="todo-input-box"></div>');
+		}
 		var divBox = $('<div></div>');
 		var todo = $('<input>',{
 						type 			: 	'text'
@@ -125,6 +144,9 @@
 	    divBox.append(cancelBtn);
 	    
 	    todoInputBox.append(divBox); 
+	    todoOutBox.append(todoInputBox); 
+	    
+	    $('body').append(todoOutBox);
 	}
 	
 	function todoList(){
@@ -135,8 +157,15 @@
 			,success 	: 	function(data){
 				console.log(data);
 				
+				var todoOutBox = createTodoOutBox();	
+				
 				var todoListBox = $('#todo-list-box');
-				todoListBox.empty(); 
+				if (todoListBox.length === 0) {
+	                todoListBox = $('<div id="todo-list-box"></div>');
+	                todoOutBox.append(todoListBox);
+	            } else {
+	                todoListBox.empty();
+	            } 
 			
 				data.forEach(function(todo){
 					var divCheckBox = $('<div id="div-check-box"></div>');
@@ -169,7 +198,7 @@
                     divCheckBox.append(deleteBtn);
                     
                     todoListBox.append(divCheckBox);
-                    
+                 
                     // 완료  - 체크박스 선택 안할 시 알림창 
                     doneBtn.on('click', function(){	
                     	var todoNo = $(this).attr('name');
@@ -207,10 +236,11 @@
 		$.ajax({
 			type		:	'post'
 			,url		:	'addTodo'
-			,data		:	{
-								'todoContent' : todoContent
-								,'todoPriority' : todoPriority
-							}
+			,contentType: 	'application/json'
+			,data		:	JSON.stringify({
+								'todo_content' : todoContent
+								,'todo_priority' : todoPriority
+							})
 			,dataType	: 'text'
 			,success	:	function(data){
 				if(data === "1"){
@@ -273,10 +303,6 @@
 </script>
 </head>
 <body>
-	<div id="todo-out-box" class="col-md-3">
 		<h3>TODOLIST</h3>
-			<div id="todo-input-box"></div>
-			<div id="todo-list-box"></div>
-	</div>
 </body>
 </html>
