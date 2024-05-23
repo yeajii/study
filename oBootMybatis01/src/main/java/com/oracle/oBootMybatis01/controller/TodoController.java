@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -76,14 +77,10 @@ public class TodoController {
 
 	// 입력
 	@ResponseBody
-	@PostMapping(value = "addTodo")
-	public int addTodo(String todoContent, int todoPriority) {
-		log.info("addTodo todoContent: {}", todoContent);
-		log.info("addTodo todoPriority: {}", todoPriority);
-		
-		Todo todo = new Todo();
-		todo.setTodo_content(todoContent);
-		todo.setTodo_priority(todoPriority);
+	@PostMapping(value = "addTodo", consumes = "application/json")
+	public int addTodo(@RequestBody Todo todo) {
+		log.info("addTodo todo.getTodo_content(): {}", todo.getTodo_content());
+		log.info("addTodo todo.getTodo_priority(): {}", todo.getTodo_priority());
 		
 		int addTodo = ts.addTodo(todo);
 		log.info("addTodo : {}", addTodo);
