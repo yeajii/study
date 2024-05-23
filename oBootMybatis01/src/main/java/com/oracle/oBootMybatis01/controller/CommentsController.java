@@ -38,7 +38,9 @@ public class CommentsController {
 	// 댓글 입력 
 	@ResponseBody						// 요청으로 전송된 미디어 타입 지정 : 클라이언트가 전송한 데이터가 json 형식임을 명시
 	@PostMapping(value = "insertComment", consumes = "application/json")	
-	public ResponseEntity<?> insertComment(@RequestBody Comments comments) {
+	public ResponseEntity<?> insertComment(@RequestBody Comments comments) {	
+										// @RequestBody: 전달된 json 데이터를 서버에서 자바 객체로 변환하여 처리
+		
 		log.info("insertComment commentBody : {}", comments.getCommentBody());
 		log.info("insertComment postNo : {}", comments.getPostNo());
 		
