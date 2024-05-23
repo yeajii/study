@@ -138,8 +138,8 @@
 	    $.ajax({
 			type 		: 'post'
 			,url 		: 'insertComment'
-			,contentType: 'application/json'
-			,data 		: JSON.stringify({					// 문자열을 JOSN으로 변환
+			,contentType: 'application/json'				// 클라이언트가 보내는 데이터가 JSON 형식임을 명시, 서버에게 해당 데이터 형식을 알려주는 역할
+			,data 		: JSON.stringify({					// JSON으로 변환해서 전송
 							 'commentBody' 	: commentBody
 							 ,'postNo' 		: postNo
 							})
