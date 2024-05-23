@@ -31,8 +31,12 @@
 	
 	<!-- 입력 -->
 	<insert id="addTodo" parameterType="Todo">
-		insert into todo (todo_no, todo_content, todo_priority) 
-				VALUES  (TODO_SEQUENCE.nextval, #{todo_content}, #{todo_priority})
+		insert into todo (todo_no
+						, todo_content
+						, todo_priority) 
+				values  (TODO_SEQUENCE.nextval
+						, #{todo_content}
+						, #{todo_priority})
 	</insert>
 
 </mapper>
