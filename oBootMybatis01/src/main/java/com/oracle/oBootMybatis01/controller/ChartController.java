@@ -27,6 +27,7 @@ public class ChartController {
 		return "showChart/chart";
 	}
 	
+	// 월간 판매 리스트
 	@ResponseBody
 	@GetMapping(value = "getSalesData")
 	public List<MonthlySales> getSalesData(){
