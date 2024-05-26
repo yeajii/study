@@ -15,6 +15,7 @@ public class ChartServiceImpl implements ChartService {
 
 	private final ChartDao chD;
 
+	// 월간 판매 리스트
 	@Override
 	public List<MonthlySales> monthlySaleList() {
 		List<MonthlySales> monthlySaleList = chD.monthlySaleList();

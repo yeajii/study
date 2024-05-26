@@ -15,6 +15,7 @@ public class ChartDaoImpl implements ChartDao {
 	
 	private final SqlSession session;
 
+	// 월간 판매 리스트
 	@Override
 	public List<MonthlySales> monthlySaleList() {
 		
