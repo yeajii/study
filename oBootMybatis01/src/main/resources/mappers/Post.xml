@@ -36,9 +36,18 @@
 	
 	<!-- 해당 글 수정 -->
 	<update id="updatePostForm" parameterType="Post">
-		update 	post 
-		set 	postname = #{postName}, postcontent = #{postContent}, isdeleted = #{isDeleted}, createDate = sysdate  
-		where 	postno = #{postNo}
+	    update post
+	    <set>
+	        postname = #{postName},
+	        postcontent = #{postContent},
+	        isdeleted = #{isDeleted},
+	        createDate = sysdate
+	        <if test="attachName != null and attachPath != null">
+	            , attachname = #{attachName},
+	            attachpath = #{attachPath}
+	        </if>
+	    </set>
+	    where postno = #{postNo}
 	</update>
 	
 	
@@ -59,8 +68,8 @@
 				, #{postContent}
 				, sysdate
 				, '1'
-				, #{attachName}
-				, #{attachPath}
+				, #{attachName, jdbcType=VARCHAR}
+        		, #{attachPath, jdbcType=VARCHAR}
 				)
 	</insert>
 	
