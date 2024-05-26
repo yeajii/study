@@ -44,8 +44,24 @@
 	
 	<!-- 새 글 입력 -->
 	<insert id="insertPostForm" parameterType="Post">
-		insert into post (postno, postname, postcontent, createdate, isdeleted)
-				values ((select nvl(max(postno), 0) + 1 from post), #{postName}, #{postContent}, sysdate, '1')
+		insert into post (
+						postno
+						, postname
+						, postcontent
+						, createdate
+						, isdeleted
+						, attachname
+						, attachpath
+						)
+				values (
+				(select nvl(max(postno), 0) + 1 from post)
+				, #{postName}
+				, #{postContent}
+				, sysdate
+				, '1'
+				, #{attachName}
+				, #{attachPath}
+				)
 	</insert>
 	
 	
