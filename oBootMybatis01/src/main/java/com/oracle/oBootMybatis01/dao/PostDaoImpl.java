@@ -98,6 +98,20 @@ public class PostDaoImpl implements PostDao {
 		}
 		return insertPostForm;
 	}
+
+	// 파일 삭제 (1 -> 0)
+	@Override
+	public int deleteFile(int postNo) {
+
+		int deleteFile = 0;
+		try {
+			deleteFile = session.update("deleteFile", postNo);
+			System.out.println("postDaoImpl deleteFile-> " + deleteFile);
+		} catch (Exception e) {
+			System.out.println("deleteFile Exception-> " + e.getMessage());
+		}
+		return deleteFile;
+	}
 	
 
 	

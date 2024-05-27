@@ -68,6 +68,15 @@ public class PostServiceImpl implements PostService {
 		return insertPostForm;
 	}
 
+	// 파일 삭제 (1 -> 0)
+	@Override
+	public int deleteFile(int postNo) {
+		int deleteFile = pd.deleteFile(postNo);
+		System.out.println("postServiceImpl deleteFile-> " + deleteFile);
+		
+		return deleteFile;
+	}
+
 	
 	
 	

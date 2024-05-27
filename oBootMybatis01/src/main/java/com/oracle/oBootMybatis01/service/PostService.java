@@ -18,6 +18,8 @@ public interface PostService {
 
 	int insertPostForm(Post post);	// 새 글 입력 
 
+	int deleteFile(int postNo);		// 파일 삭제 (1 -> 0)
+
 	
 
 
