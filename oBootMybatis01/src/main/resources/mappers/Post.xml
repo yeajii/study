@@ -30,7 +30,9 @@
 	
 	<!-- 해당 글 삭제 -->
 	<update id="deletePost" parameterType="int">  
-		update post set isdeleted = '0' where postno = #{postno}
+		update 	post 
+		set 	isdeleted = '0' 
+		where 	postno = #{postno}
 	</update>
 	
 	
@@ -41,15 +43,22 @@
 	        postname = #{postName},
 	        postcontent = #{postContent},
 	        isdeleted = #{isDeleted},
-	        createDate = sysdate
+	        createDate = sysdate,
 	        <if test="attachName != null and attachPath != null">
-	            , attachname = #{attachName},
-	            attachpath = #{attachPath}
+	            attachname = #{attachName},
+	            attachpath = #{attachPath},
+	        </if>
+	        filedeleted = 
+	        <if test="attachName != null and attachName != ''">
+	            '1'
+	        </if>
+	        <if test="attachName == null or attachName == ''">
+	            null
 	        </if>
 	    </set>
 	    where postno = #{postNo}
 	</update>
-	
+
 	
 	<!-- 새 글 입력 -->
 	<insert id="insertPostForm" parameterType="Post">
@@ -61,6 +70,7 @@
 						, isdeleted
 						, attachname
 						, attachpath
+						, filedeleted
 						)
 				values (
 				(select nvl(max(postno), 0) + 1 from post)
@@ -70,9 +80,22 @@
 				, '1'
 				, #{attachName, jdbcType=VARCHAR}
         		, #{attachPath, jdbcType=VARCHAR}
+        		,<if test="attachName != null and attachName != ''">
+            		'1'
+        		</if>
+        		<if test="attachName == null or attachName == ''">
+            		null
+        		</if>
 				)
 	</insert>
 	
+	
+	<!-- 파일 삭제 (1 -> 0) -->
+	<update id="deleteFile" parameterType="int">
+		update 	post 
+		set 	filedeleted = '0' 
+		where 	postno = #{postno}
+	</update>
 	
 	
 </mapper>

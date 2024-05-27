@@ -213,10 +213,79 @@
 		}
 	}
 	
-	function popup(){
-		var url = '/upload/${contentPost.attachPath}';
-		var encodedUrl = encodeURI(url);
-		window.open(encodedUrl, '_blank', 'width=800, height=600');
+	// 파일 삭제 (1 -> 0)
+	function deleteFile(postNo, fileDeleted){
+		console.log("파일 삭제의 글 번호: " + postNo);
+		
+		// 파일이 존재하지 않거나 이미 삭제된 경우
+		 if (fileDeleted === "" || fileDeleted === "0") {
+	        alert("파일이 존재하지 않습니다");
+	        return;
+	    }
+
+		if(confirm("파일 삭제하시겠습니까?")){
+			$.ajax({
+				type 		: 'post'
+				,url 		: 'deleteFile'
+				,data 		: {'postNo' : postNo}
+				,dataType 	: 'text'
+				,success 	: function(data){
+					if(data == 1){
+						alert("파일이 삭제 되었습니다");
+						var location = "start";
+						window.location.href = "contentPost?postNo=" + postNo;
+					}else{
+						alert("파일이 삭제되지 않았습니다.");
+					}
+				}
+			});
+		}else{
+			return false;
+		}
+	}
+	
+	function popupOrDownload(url, fileName){
+		var newWindow = window.open();					// 새 창 열기
+		var ext = url.split('.').pop().toLowerCase();	// 파일의 확장자 추출하여 소문자로 변환
+
+		if(['jpg', 'jpeg', 'png', 'gif', 'bmp'].indexOf(ext) !== -1){	// indexOf: 찾는 문자열이 없으면 -1 리턴 
+			// 새 창의 문서가 준비되었을 때 실행
+			 $(newWindow.document).ready(function() {
+		            var downloadLink = $('<a>', {
+		                href	: url,
+		                download: fileName,
+		                text	: 'Download',
+		                css		: {
+		                    display	: 'block',
+		                    margin	: '10px 0'
+		                }
+		            });
+		            
+		            $(newWindow.document.body).prepend(downloadLink);
+		            
+		            var img = $('<img>', {
+		                src	: url,
+		                css	: {
+		                    display	: 'block',
+		                    maxWidth: '100%',
+		                    height	: 'auto'
+		                }
+		            });
+		            
+		            $(newWindow.document.body).append(img);
+		        });
+		}else{
+			// 이미지 파일이 아닌 경우 파일 다운로드
+			var anchor = $('<a>', {
+            href		: url,
+            download	: fileName,
+            css			: { display: 'none' }
+        });
+			
+        $(newWindow.document.body).append(anchor);
+        anchor[0].click(); 	// 다운로드 진행
+        anchor.remove(); 	// 다운로드 후 팝업창에 표시되지 않도록 함 
+		}
 	}
 	
 </script>
@@ -245,8 +314,7 @@
 			<th>첨부파일</th>
 			<td>
 				<c:if test="${result == 1}">
-					<a href="javascript:popup()">${contentPost.attachName}</a>
-					<!-- javascript: 프로토콜은 URL로서 URL를 클릭하면 브라우저에서 JavaScript 코드를 실행 -->
+					<a href="javascript:void(0);" onclick="popupOrDownload('/upload/${contentPost.attachPath}', '${contentPost.attachName}')">${contentPost.attachName}</a>
 				</c:if>
 				<c:if test="${result == 0}">
 					현재 첨부파일이 존재하지 않습니다.
@@ -258,7 +326,7 @@
 				<input type="button" id="close-btn" value="닫기"> 
 				<input type="button" value="수정" onclick="location.href='updatePost?postNo=${contentPost.postNo}'">
 				<input type="button" value="삭제" onclick="deletePost(${contentPost.postNo})">
-				<%-- <input type="button" value="파일삭제" onclick="deletePost(${contentPost.postNo})"> --%>
+				<input type="button" value="파일삭제" onclick="deleteFile('${contentPost.postNo}', '${contentPost.fileDeleted}')">
 			</td>
 		</tr>
 	</table>
