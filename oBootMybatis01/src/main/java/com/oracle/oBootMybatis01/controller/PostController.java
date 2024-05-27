@@ -64,12 +64,13 @@ public class PostController {
 		log.info("contentPost : {}", contentPost);
 		
 		int result;
-		if((contentPost.getAttachName() != null && !contentPost.getAttachName().isEmpty()) && 
-		   (contentPost.getAttachPath() != null && !contentPost.getAttachPath().isEmpty())) {
-			result = 1;
-		}else {
-			result = 0;
-		}
+		if ((contentPost.getAttachName() != null && !contentPost.getAttachName().isEmpty()) && 
+	        (contentPost.getAttachPath() != null && !contentPost.getAttachPath().isEmpty()) &&
+	        !"0".equals(contentPost.getFileDeleted())) {
+		    result = 1;  // 파일 존재
+	    } else {
+	        result = 0;  // 파일 존재하지 않음
+	    }
 		
 		model.addAttribute("contentPost", contentPost);
 		model.addAttribute("result", result);
@@ -99,12 +100,13 @@ public class PostController {
 		log.info("contentPost : {}", contentPost);
 		
 		int result;
-		if((contentPost.getAttachName() != null && !contentPost.getAttachName().isEmpty()) && 
-		   (contentPost.getAttachPath() != null && !contentPost.getAttachPath().isEmpty())) {
-			result = 1;
-		}else {
-			result = 0;
-		}
+		if ((contentPost.getAttachName() != null && !contentPost.getAttachName().isEmpty()) && 
+	        (contentPost.getAttachPath() != null && !contentPost.getAttachPath().isEmpty()) &&
+	        !"0".equals(contentPost.getFileDeleted())) {
+		    result = 1;  // 파일 존재
+	    } else {
+	        result = 0;  // 파일 존재하지 않음
+	    }
 		
 		model.addAttribute("contentPost", contentPost);
 		model.addAttribute("result", result);
@@ -150,7 +152,7 @@ public class PostController {
 		return "redirect:/contentPost?postNo={postNo}";
 	}
 	
-	// 이전 파일 삭제 
+	// 파일 수정하기 위해 기존 파일 삭제  
 	private void deleteFile(String attachPath, HttpServletRequest request) {
 		String uploadPath = request.getSession().getServletContext().getRealPath("/upload/");
 		File file = new File(uploadPath, attachPath);
@@ -236,6 +238,18 @@ public class PostController {
 		return savedName;
 	}
 	
+	// 파일 삭제 (1 -> 0) -------------------------------------------
+	@ResponseBody
+	@PostMapping(value = "deleteFile")
+	public int deleteFile(int postNo) {
+		log.info("----- deleteFile Start -----");
+		log.info("postNo : {}", postNo);
+		
+		int deleteFile = ps.deleteFile(postNo);
+		log.info("deleteFile : {}", deleteFile);
+		
+		return deleteFile;
+	}
 	
 	
 }
