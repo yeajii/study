@@ -33,20 +33,20 @@ public class PostController {
 	
 	private final PostService ps; 
 	
-	// 전체 리스트 
+	// 전체 리스트 --------------------------------------------------------------
 	@RequestMapping(value = "start")
 	public String selectPost(Model model) {
-		System.out.println("------------- start -----------------");
+		System.out.println("----- selectPost start -----");
 		
 		// 전체 리스트 갯수
 		int postListTotalCount = ps.postListTotalCount();
-		log.info("postController postListTotalCount : {}", postListTotalCount);
+		log.info("postListTotalCount : {}", postListTotalCount);
 		
 		List<Post> postList = ps.selectPost();
-		log.info("postController selectPost.size : {}", postList.size());
+		log.info("selectPost.size : {}", postList.size());
 		
 //		for(Post post : postList) {
-//			System.out.println("postController post-> " + post);
+//			System.out.println("post-> " + post);
 //		}
 		
 		model.addAttribute("postListTotalCount", postListTotalCount);
@@ -55,23 +55,34 @@ public class PostController {
 		return "post_select";
 	}
 	
-	// 상세 페이지 
+	// 상세 페이지 --------------------------------------------------------------
 	@GetMapping(value = "contentPost")
 	public String contentPost(Model model, int postNo) {
+		log.info("----- contentPost Start -----");
 		
 		Post contentPost = ps.contentPost(postNo);
-		log.info("postController contentPost : {}", contentPost);
+		log.info("contentPost : {}", contentPost);
+		
+		int result;
+		if((contentPost.getAttachName() != null && !contentPost.getAttachName().isEmpty()) && 
+		   (contentPost.getAttachPath() != null && !contentPost.getAttachPath().isEmpty())) {
+			result = 1;
+		}else {
+			result = 0;
+		}
 		
 		model.addAttribute("contentPost", contentPost);
+		model.addAttribute("result", result);
 		
 		return "post_content";
 	}
 	
-	// 해당 글 삭제
-	@ResponseBody	// 자바 객체를  http 응답 body로 전송할 수 있다    
+	// 해당 글 삭제 --------------------------------------------------------------
+	@ResponseBody	
 	@RequestMapping(value = "deletePost")
 	public int deletePost(int postNo) {
-		log.info("deletePost postNo : {}", postNo);
+		log.info("----- deletePost Start -----");
+		log.info("postNo : {}", postNo);
 		
 		int deletePost = ps.deletePost(postNo);
 		log.info("deletePost : {}", deletePost);
@@ -79,22 +90,57 @@ public class PostController {
 		return deletePost;  
 	}
 	
-	// 해당 글 수정 하기 위한 상세 정보 가져오기 
+	// 해당 글 수정 하기 위한 상세 정보 가져오기 ---------------------------------------------
 	@GetMapping(value = "updatePost")
 	public String updatePost(int postNo, Model model) {
+		log.info("----- updatePost Start -----");
 		
 		Post contentPost = ps.contentPost(postNo);
 		log.info("contentPost : {}", contentPost);
 		
+		int result;
+		if((contentPost.getAttachName() != null && !contentPost.getAttachName().isEmpty()) && 
+		   (contentPost.getAttachPath() != null && !contentPost.getAttachPath().isEmpty())) {
+			result = 1;
+		}else {
+			result = 0;
+		}
+		
 		model.addAttribute("contentPost", contentPost);
+		model.addAttribute("result", result);
 		
 		return "post_update";
 	}
 	
 	// 해당 글 수정 
 	@PostMapping(value = "updatePostForm")
-	public String updatePostForm(Post post, RedirectAttributes redirectAttributes) {
-		log.info("updatePostForm : {}", post);
+	public String updatePostForm(@ModelAttribute Post post
+								,@RequestParam(value = "file1", required = false) MultipartFile file1
+								,HttpServletRequest request
+								,RedirectAttributes redirectAttributes) throws IOException {	// 리다이렉트 시 데이터 전달 위함
+		log.info("----- updatePostForm Start -----");
+		
+		log.info("getPostNo: {}"	, post.getPostNo());
+		log.info("getPostName: {}"	, post.getPostName());
+		log.info("getPostContent: {}", post.getPostContent());
+		
+		// 파일 수정 O
+		if(file1 != null && !file1.isEmpty()) {	
+			// 이전 파일 삭제
+			deleteFile(post.getAttachPath(), request);
+			
+			// 새 파일 업로드 
+			String uploadPath = request.getSession().getServletContext().getRealPath("/upload/");
+	        String saveName = uploadFile(file1.getOriginalFilename(), file1.getBytes(), uploadPath);
+	        
+	        // 수정된 파일 정보 설정
+	        post.setAttachName(file1.getOriginalFilename());
+	        post.setAttachPath(saveName);
+		}else {	
+			// 파일 수정 X, 기존 파일 정보 유지 
+			post.setAttachName(post.getAttachName());
+	        post.setAttachPath(post.getAttachPath());
+		}
 		
 		int updatePostForm = ps.updatePostForm(post);
 		log.info("updatePostForm : {}", updatePostForm);
@@ -104,9 +150,20 @@ public class PostController {
 		return "redirect:/contentPost?postNo={postNo}";
 	}
 	
-	// 새 글 입력하기 위한 페이지 이동
+	// 이전 파일 삭제 
+	private void deleteFile(String attachPath, HttpServletRequest request) {
+		String uploadPath = request.getSession().getServletContext().getRealPath("/upload/");
+		File file = new File(uploadPath, attachPath);
+		if(file.exists()) {
+			file.delete();
+			log.info("이전 파일 삭제 : {}", attachPath);
+		}
+	}
+	
+	// 새 글 입력하기 위한 페이지 이동 ---------------------------------------------------
 	@RequestMapping(value = "insertPost")
 	public String insertPost() {
+		log.info("----- insertPost Start -----");
 		
 		return "post_insert";
 	}
@@ -115,34 +172,39 @@ public class PostController {
 	@RequestMapping(value = "insertPostForm", method = RequestMethod.POST)
 	public String insertPostForm(@ModelAttribute Post post
 								,@RequestParam(value = "file1", required = false) MultipartFile file1
-								,HttpServletRequest request) throws IOException {
+								,HttpServletRequest request) throws IOException {	// 클라이언트가 보낸 정보들 들어있음
+		log.info("----- insertPostForm Start -----");
 		
-		log.info("insertPostForm 제목 : {}", post.getPostName());
-		log.info("insertPostForm 내용 : {}", post.getPostContent());
+		log.info("getPostName : {}", post.getPostName());
+		log.info("getPostContent : {}", post.getPostContent());
 		
-		// file upload
-		String attachPath = "upload";
-		String uploadPath = request.getSession().getServletContext().getRealPath("/upload/");	// 저장 위치 지정
-		System.out.println("------------------------uploadPath? " + uploadPath);
-		
-		log.info("insertPostForm file upload Start!");
-		
-		// post_insert.jsp 에서 enctype="multipart/form-data" 있어야 보임 
-		log.info("getOriginalFilename : {}", file1.getOriginalFilename());	// 원본 파일명
-		log.info("getContentType : {}", 	file1.getContentType());		// 파일 타입
-		log.info("getSize : {}", 			file1.getSize());				// 파일 사이즈
-		log.info("uploadPath : {}", 		uploadPath);					// 파일 저장되는 주소 
-		
-		String saveName = uploadFile(file1.getOriginalFilename(), file1.getBytes(), uploadPath);	// 저장되는 파일명 
-		log.info("saveName : {}", saveName);
-		
-		if(!file1.isEmpty()) {
-			log.info("파일이 존재합니다");
+		if(file1 != null && !file1.isEmpty()) {
+			log.info("파일 insert O");
+			
+			// 저장 위치 지정
+			String uploadPath = request.getSession().getServletContext().getRealPath("/upload/");	
+			log.info("uploadPath : {}", uploadPath);
+			
+			// post_insert.jsp 에서 enctype="multipart/form-data" 있어야 보임 
+			log.info("getOriginalFilename : {}", file1.getOriginalFilename());	// 원본 파일명
+			log.info("getContentType : {}", 	file1.getContentType());		// 파일 타입
+			log.info("getSize : {}", 			file1.getSize());				// 파일 사이즈
+			log.info("uploadPath : {}", 		uploadPath);					// 파일 저장되는 주소 
+			
+			// 저장되는 파일명
+			String saveName = uploadFile(file1.getOriginalFilename(), file1.getBytes(), uploadPath);	 
+			log.info("saveName : {}", saveName);
+			
 			post.setAttachPath(saveName);
 			post.setAttachName(file1.getOriginalFilename());
+		}else {
+			log.info("파일 insert X");
+			post.setAttachPath(null);
+	        post.setAttachName(null); 
 		}
-		log.info("post.getAttachName : {}", post.getAttachName());
-		log.info("post.getAttachPath : {}", post.getAttachPath());
+		
+		log.info("getAttachName : {}", post.getAttachName());
+		log.info("getAttachPath : {}", post.getAttachPath());
 		
 		int insertPostForm = ps.insertPostForm(post);
 		log.info("insertPostForm : {}", insertPostForm);
@@ -150,12 +212,12 @@ public class PostController {
 		return "redirect:/start";
 	}
 	
-	// file upload method
+	// uploadFile method
 	private String uploadFile(String originalName, byte[] bytes, String uploadPath) throws IOException {
-		log.info("private uploadFile method Start !");
+		log.info("----- private uploadFile method Start -----");
 		log.info("uploadPath : {}", uploadPath);
 		
-		// universally unique identifier (UUID)
+		// universally unique identifier (UUID): 서버의 파일명 중복 방지 
 		UUID uid = UUID.randomUUID();
 		
 		// 신규 폴더 (directory) 생성

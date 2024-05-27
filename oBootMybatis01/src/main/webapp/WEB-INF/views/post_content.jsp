@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -211,6 +213,12 @@
 		}
 	}
 	
+	function popup(){
+		var url = '/upload/${contentPost.attachPath}';
+		var encodedUrl = encodeURI(url);
+		window.open(encodedUrl, '_blank', 'width=800, height=600');
+	}
+	
 </script>
 </head>
 <body>
@@ -234,10 +242,23 @@
 			<td style="width: 70%;">${contentPost.postContent}</td>
 		</tr>
 		<tr>
+			<th>첨부파일</th>
+			<td>
+				<c:if test="${result == 1}">
+					<a href="javascript:popup()">${contentPost.attachName}</a>
+					<!-- javascript: 프로토콜은 URL로서 URL를 클릭하면 브라우저에서 JavaScript 코드를 실행 -->
+				</c:if>
+				<c:if test="${result == 0}">
+					현재 첨부파일이 존재하지 않습니다.
+				</c:if>
+			</td>
+		</tr>
+		<tr>
 			<td>
 				<input type="button" id="close-btn" value="닫기"> 
 				<input type="button" value="수정" onclick="location.href='updatePost?postNo=${contentPost.postNo}'">
 				<input type="button" value="삭제" onclick="deletePost(${contentPost.postNo})">
+				<%-- <input type="button" value="파일삭제" onclick="deletePost(${contentPost.postNo})"> --%>
 			</td>
 		</tr>
 	</table>
