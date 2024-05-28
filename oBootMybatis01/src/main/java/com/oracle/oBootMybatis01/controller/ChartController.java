@@ -33,8 +33,8 @@ public class ChartController {
 	public List<MonthlySales> getSalesData(){
 		
 		List<MonthlySales> monthlySaleList = chS.monthlySaleList();
-		log.info("monthlySaleList : {}", monthlySaleList.size());
-		
+		log.info("monthlySaleList.size : {}", monthlySaleList.size());
+
 		return monthlySaleList;
 	}
 
