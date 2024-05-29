@@ -10,6 +10,7 @@
 		<typeAlias alias="Comments"   		type="com.oracle.oBootMybatis01.model.Comments"/>
 		<typeAlias alias="Todo"   			type="com.oracle.oBootMybatis01.model.Todo"/>
 		<typeAlias alias="MonthlySales"   	type="com.oracle.oBootMybatis01.model.MonthlySales"/>
+		<typeAlias alias="BoardFile"   		type="com.oracle.oBootMybatis01.model.BoardFile"/>
 	
 	</typeAliases>
 			

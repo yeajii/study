@@ -191,7 +191,6 @@ public class PostController {
 			log.info("getOriginalFilename : {}", file1.getOriginalFilename());	// 원본 파일명
 			log.info("getContentType : {}", 	file1.getContentType());		// 파일 타입
 			log.info("getSize : {}", 			file1.getSize());				// 파일 사이즈
-			log.info("uploadPath : {}", 		uploadPath);					// 파일 저장되는 주소 
 			
 			// 저장되는 파일명
 			String saveName = uploadFile(file1.getOriginalFilename(), file1.getBytes(), uploadPath);	 

@@ -5,7 +5,7 @@
 <!-- com.oracle.s202350101.뒤에 매핑하고 싶은 모델쓰면 됩니다 
 	 mapper 여러개 쓰셔도 됩니다. -->
 	 
-<mapper namespace="com.oracle.oBootMybatis01.PostMapper">  <!-- Mapper 왜 썼는지 구글 검색 -->
+<mapper namespace="com.oracle.oBootMybatis01.PostMapper">  
 	
 	<!-- 전체 리스트 갯수 -->
 	<select id="postListTotalCount" resultType="int">

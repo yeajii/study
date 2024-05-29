@@ -17,15 +17,13 @@
 			$.ajax({
 				type 		: 'get'
 				,url 		: 'getSalesData'
-				,async 		: 'true'
-				,contentType: 'application/json'
-				,dataType   : 'json'  				// 서버에서 반환하는 데이터 타입을 JSON으로 지정
+				,dataType   : 'json'  				
 				,success 	: function(data){
 					console.log("data-> ", data); 
 					console.log(JSON.stringify(data, null, 2));  // JSON 문자열로 변환하여 읽기 쉽게 출력
 					
 					// 월과 매출 데이터를 배열로 분리 
-					var months = data.map(function(item){
+					var months = data.map(function(item){		// item = 배열의 각 요소 
 						return item.month;
 					});
 					var sales = data.map(function(item){
