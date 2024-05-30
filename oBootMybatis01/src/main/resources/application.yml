@@ -17,11 +17,11 @@ spring:
     password: tiger
 
   # jpa Setting
-  jpa:
-    show-sql: true
+#  jpa:
+#    show-sql: true
     # Operation --> create / none
-    hibernate:  
-      ddl-auto: update
+#    hibernate:  
+#      ddl-auto: update
       
   # view Resolver
   mvc:
