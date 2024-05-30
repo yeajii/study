@@ -43,6 +43,7 @@ public class BoardFileDaoImpl implements BoardFileDao {
 		return boardFileList;
 	}
 
+	// 새 글 입력 
 	@Override
 	public int insertBoardFileForm(BoardFile boardFile) {
 

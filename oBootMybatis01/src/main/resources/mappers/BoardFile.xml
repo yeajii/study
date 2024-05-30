@@ -21,7 +21,7 @@
 	</select>
 	
 	
-	<!--  -->
+	<!-- 새 글 입력  -->
 	<insert id="insertBoardFileForm" parameterType="BoardFile">
 		insert into boardfile (
 								id, 

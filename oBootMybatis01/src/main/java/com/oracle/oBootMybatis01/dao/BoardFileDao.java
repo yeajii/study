@@ -10,6 +10,6 @@ public interface BoardFileDao {
 
 	List<BoardFile> boardFileList();	// 전체 리스트 
 
-	int insertBoardFileForm(BoardFile boardFile);
+	int insertBoardFileForm(BoardFile boardFile);	// 새 글 입력 
 
 }

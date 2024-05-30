@@ -29,6 +29,7 @@ public class BoardFileServiceImpl implements BoardFileService {
 		return boardFileList;
 	}
 
+	// 새 글 입력 
 	@Override
 	public int insertBoardFileForm(BoardFile boardFile) {
 		int insertBoardFileForm = bfd.insertBoardFileForm(boardFile);
