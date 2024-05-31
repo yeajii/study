@@ -61,26 +61,40 @@ public class BoardFileController {
 	public String insertBoardFileForm(@ModelAttribute BoardFile boardFile
 									,@RequestParam(value = "file1", required = true) MultipartFile file1
 									,HttpServletRequest request) throws IOException {
-		log.info("----- insertBoardFileForm Start -----");
+		log.info("----- insertBoardFileForm Start -----");		
 		
-		String uploadPath = "C:\\boardFile";
-		String saveName = uploadFile(file1.getOriginalFilename(), file1.getBytes(), uploadPath);
-		log.info("saveName : {}", saveName);
+	    int boardFileId;
+	    // 변수 초기화, 예외 발생 시 이 변수들이 참조할 기본값 
+	    String uploadPath = null;
+	    String saveName = null;
 		
 		try {
 	        int insertBoardFileForm = bfs.insertBoardFileForm(boardFile);
 	        log.info("insertBoardFileForm : {}", insertBoardFileForm);
+	        
+	        // PK 값 얻기:  Mapper에 설정한 keyProperty="id"에 의해 자동으로 설정
+			boardFileId = boardFile.getId();
+			log.info("boardFileId : {}", boardFileId);
+			
+			// 파일 저장 경로 설정 (boardFile 폴더의 하위 폴더로 PK 값 사용)
+		    uploadPath = "C:\\boardFile\\" + boardFileId;
+		    saveName = uploadFile(file1.getOriginalFilename(), file1.getBytes(), uploadPath);
+		    log.info("saveName : {}", saveName);
+		    
 	    } catch (Exception e) {
-	        log.error("Error inserting board file: ", e);
-	        // 데이터베이스 삽입이 실패하면 파일 업로드를 롤백하기 위해 업로드된 파일을 삭제
-	        File uploadedFile = new File(uploadPath, saveName);
-	        if (uploadedFile.exists()) {
-	            uploadedFile.delete();
-	            log.info("Uploaded file deleted due to insert error: {}", saveName);
+	    	log.error("Error during insertBoardFileForm process: ", e.getMessage());
+	    	
+	    	// 업로드된 파일 삭제 
+	    	if (uploadPath != null && saveName != null) {
+	            File uploadedFile = new File(uploadPath, saveName);
+	            if (uploadedFile.exists()) {
+	                uploadedFile.delete();
+	                log.info("Uploaded file deleted due to insert error: {}", saveName);
+	            }
 	        }
 	        throw e;
 	    }
-		return "redirect:/boardFile";
+	    return "redirect:/boardFile";
 	}
 	
 	private String uploadFile(String originalName, byte[] bytes, String uploadPath) throws IOException {

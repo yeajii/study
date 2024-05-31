@@ -23,20 +23,23 @@
 	
 	<!-- 새 글 입력  -->
 	<insert id="insertBoardFileForm" parameterType="BoardFile">
-		insert into boardfile (
-								id, 
-								title, 
-								content, 
-								createDate, 
-								isDeleted
-								)
-						values (
-						(select nvl(max(id), 0) +1 from boardfile),
-						#{title},
-						#{content},
-						sysdate,
-						'1'
-						)
+		<selectKey keyProperty="id" resultType="int" order="BEFORE">
+        	SELECT NVL(MAX(id), 0) + 1 FROM boardfile
+    	</selectKey>
+		INSERT INTO boardfile (
+	        id, 
+	        title, 
+	        content, 
+	        createDate, 
+	        isDeleted
+	    ) 
+	    VALUES (
+	        #{id},
+	        #{title},
+	        #{content},
+	        SYSDATE,
+	        '1'
+	    )
 	</insert>
 	
 	
