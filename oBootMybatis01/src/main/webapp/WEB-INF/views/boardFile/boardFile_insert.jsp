@@ -17,7 +17,7 @@
 		String strDate = simpleDateFormat.format(date);
 	%>
 	
-	<h2>Insert Page</h2>
+	<h1>Insert Page</h1>
 	
 	<form:form action="insertBoardFileForm" method="post" modelAttribute="BoardFile" enctype="multipart/form-data">
 		<table border="1">
@@ -38,7 +38,7 @@
 		
 		<tr>
             <th>첨부파일</th>
-            <td><input type="file" name="file1"></td>
+            <td><input type="file" name="file1" multiple="multiple"></td>
         </tr>
 		
 		<tr>

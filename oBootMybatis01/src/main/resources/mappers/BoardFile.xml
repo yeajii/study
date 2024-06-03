@@ -43,4 +43,12 @@
 	</insert>
 	
 	
+	<select id="contentBoardFile" parameterType="int" resultType="BoardFile">
+		select 	* 
+		from 	boardfile
+		where   isdeleted = '1'
+		and 	id = #{id}
+	</select>
+	
+	
 </mapper>

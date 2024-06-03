@@ -12,4 +12,6 @@ public interface BoardFileService {
 
 	int insertBoardFileForm(BoardFile boardFile);	// 새 글 입력 
 
+	BoardFile contentBoardFile(int id);
+
 }

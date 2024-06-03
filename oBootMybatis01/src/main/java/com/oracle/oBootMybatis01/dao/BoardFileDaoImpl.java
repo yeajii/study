@@ -57,6 +57,19 @@ public class BoardFileDaoImpl implements BoardFileDao {
 		}
 		return insertBoardFileForm;
 	}
+
+	@Override
+	public BoardFile contentBoardFile(int id) {
+
+		BoardFile contentBoardFile = null;
+		try {
+			contentBoardFile = session.selectOne("contentBoardFile", id);
+			System.out.println("BoardFileDaoImpl contentBoardFile-> " + contentBoardFile);
+		} catch (Exception e) {
+			System.out.println("contentBoardFile Exception-> " + e.getMessage());
+		}
+		return contentBoardFile;
+	}
 	
 
 }
