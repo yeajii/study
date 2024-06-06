@@ -36,10 +36,18 @@ public class BoardFileServiceImpl implements BoardFileService {
 		return insertBoardFileForm;
 	}
 
+	// 상세 페이지
 	@Override
 	public BoardFile contentBoardFile(int id) {
 		BoardFile contentBoardFile = bfd.contentBoardFile(id);
 		return contentBoardFile;
+	}
+
+	// 해당 글 수정 
+	@Override
+	public int updateBoardFileForm(BoardFile boardFile) {
+		int updateBoardFileForm = bfd.updateBoardFileForm(boardFile);
+		return updateBoardFileForm;
 	}
 	
 }

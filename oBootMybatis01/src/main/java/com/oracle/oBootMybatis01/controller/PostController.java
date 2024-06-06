@@ -189,8 +189,8 @@ public class PostController {
 			
 			// post_insert.jsp 에서 enctype="multipart/form-data" 있어야 보임 
 			log.info("getOriginalFilename : {}", file1.getOriginalFilename());	// 원본 파일명
-			log.info("getContentType : {}", 	file1.getContentType());		// 파일 타입
-			log.info("getSize : {}", 			file1.getSize());				// 파일 사이즈
+			log.info("getContentType : {}", file1.getContentType());			// 파일 타입
+			log.info("getSize : {}", file1.getSize());							// 파일 사이즈
 			
 			// 저장되는 파일명
 			String saveName = uploadFile(file1.getOriginalFilename(), file1.getBytes(), uploadPath);	 
@@ -218,7 +218,6 @@ public class PostController {
 		log.info("----- private uploadFile method Start -----");
 		log.info("uploadPath : {}", uploadPath);
 		
-		// universally unique identifier (UUID): 서버의 파일명 중복 방지 
 		UUID uid = UUID.randomUUID();
 		
 		// 신규 폴더 (directory) 생성

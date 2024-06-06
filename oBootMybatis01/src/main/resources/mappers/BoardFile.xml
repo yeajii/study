@@ -43,12 +43,24 @@
 	</insert>
 	
 	
+	<!-- 상세 페이지 -->
 	<select id="contentBoardFile" parameterType="int" resultType="BoardFile">
 		select 	* 
 		from 	boardfile
 		where   isdeleted = '1'
 		and 	id = #{id}
 	</select>
+	
+	
+	<!-- 해당 글 수정  -->
+	<update id="updateBoardFileForm" parameterType="BoardFile">
+		update boardfile
+		set
+			title 		= #{title},
+			content 	= #{content},
+			createdate 	= sysdate
+		where id = #{id}
+	</update>
 	
 	
 </mapper>

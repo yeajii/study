@@ -58,6 +58,7 @@ public class BoardFileDaoImpl implements BoardFileDao {
 		return insertBoardFileForm;
 	}
 
+	// 상세 페이지
 	@Override
 	public BoardFile contentBoardFile(int id) {
 
@@ -69,6 +70,20 @@ public class BoardFileDaoImpl implements BoardFileDao {
 			System.out.println("contentBoardFile Exception-> " + e.getMessage());
 		}
 		return contentBoardFile;
+	}
+
+	// 해당 글 수정 
+	@Override
+	public int updateBoardFileForm(BoardFile boardFile) {
+
+		int updateBoardFileForm = 0;
+		try {
+			updateBoardFileForm = session.update("updateBoardFileForm", boardFile);
+			System.out.println("BoardFileDaoImpl updateBoardFileForm-> " + updateBoardFileForm);
+		} catch (Exception e) {
+			System.out.println("updateBoardFileForm Exception-> " + e.getMessage());
+		}
+		return updateBoardFileForm;
 	}
 	
 
