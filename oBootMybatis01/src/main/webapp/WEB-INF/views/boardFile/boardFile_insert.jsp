@@ -38,7 +38,7 @@
 		
 		<tr>
             <th>첨부파일</th>
-            <td><input type="file" name="file1" multiple="multiple"></td>
+            <td><input type="file" name="files" multiple="multiple"></td>
         </tr>
 		
 		<tr>

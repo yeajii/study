@@ -19,6 +19,51 @@
 				location.href = 'boardFile';
 			});
 		}
+		
+		function popupOrDownload(fileName) {
+		    var url = '/download?fileName=' + encodeURIComponent(fileName);
+		    var newWindow = window.open();
+		    var ext = fileName.split('.').pop().toLowerCase();
+			
+			if(['jpg', 'jpeg', 'png', 'gif', 'bmp'].indexOf(ext) !== -1){	// indexOf: 찾는 문자열이 없으면 -1 리턴 
+				// 새 창의 문서가 준비되었을 때 실행
+				 $(newWindow.document).ready(function() {
+			            var downloadLink = $('<a>', {
+			                href	: url,
+			                download: fileName,
+			                text	: 'Download',
+			                css		: {
+			                    display	: 'block',
+			                    margin	: '10px 0'
+			                }
+			            });
+			            
+			            $(newWindow.document.body).prepend(downloadLink);
+			            
+			            var img = $('<img>', {
+			                src	: url,
+			                css	: {
+			                    display	: 'block',
+			                    maxWidth: '100%',
+			                    height	: 'auto'
+			                }
+			            });
+			            
+			            $(newWindow.document.body).append(img);
+			        });
+			}else{
+				// 이미지 파일이 아닌 경우 파일 다운로드
+				var anchor = $('<a>', {
+	            href		: url,
+	            download	: fileName,
+	            css			: { display: 'none' }
+	        });
+				
+	        $(newWindow.document.body).append(anchor);
+	        anchor[0].click(); 	// 다운로드 진행
+	        anchor.remove(); 	// 다운로드 후 팝업창에 표시되지 않도록 함 
+			}
+		}
 	</script>
 </head>
 <body>
@@ -38,7 +83,9 @@
 					<c:otherwise>
 						<ul>
 				            <c:forEach var="fileName" items="${fileNameList}">
-				                <li>${fileName}</li>
+				                <li>
+							        <a href="javascript:void(0);" onclick="popupOrDownload('${fileName}')">${fileName}</a>
+							    </li>
 				            </c:forEach>
 				        </ul>
 					</c:otherwise>
