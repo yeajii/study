@@ -245,6 +245,8 @@
 	}
 	
 	function popupOrDownload(url, fileName){
+		console.log("url: " + url);
+		
 		var newWindow = window.open();					// 새 창 열기
 		var ext = url.split('.').pop().toLowerCase();	// 파일의 확장자 추출하여 소문자로 변환
 

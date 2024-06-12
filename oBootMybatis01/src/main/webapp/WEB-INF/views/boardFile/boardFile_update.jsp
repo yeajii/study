@@ -21,8 +21,39 @@
 			$('#close-btn').on('click', function(){
 				location.href = 'boardFile';
 			});
+			
 			$('#back-btn').on('click', function(){
 				location.href = 'contentBoardFile?id=${contentBoardFile.id}';
+			});
+			
+			$('ul li span').each(function(){
+				var fileName = $(this).text();
+				var lastIndex = fileName.lastIndexOf("_");	
+				var extensionIndex = fileName.lastIndexOf(".");
+				
+				if (lastIndex !== -1 && extensionIndex !== -1 && lastIndex < extensionIndex) {
+	                var displayName = fileName.substring(0, lastIndex) + fileName.substring(extensionIndex);
+	                $(this).text(displayName);
+	            }
+			});
+			
+			$('#files-delete-btn').on('click', function(){
+				if(confirm('선택한 파일을 삭제하시겠습니까?')){
+					var deleteFileList = [];
+					$('input[type="checkbox"][name="deleteFileList"]:checked').each(function(){ 
+		                deleteFileList.push($(this).val());
+		            });
+		            
+		            $('<input />').attr('type', 'hidden')
+	                .attr('name', 'deleteFileList')
+	                .attr('value', deleteFileList)
+	                .appendTo('form');
+		            
+					$("form").submit();
+					console.log("폼 제출됨");
+				}else{
+					return false;
+				}
 			});
 		}
 	</script>
@@ -36,7 +67,6 @@
 	<h1>Update Page</h1>
 	
 	<form:form action="updateBoardFileForm" method="post" modelAttribute="BoardFile" enctype="multipart/form-data">
-		
 		<input type="hidden" name="id" value="${contentBoardFile.id}">
 	  	
 		<table border="1">
@@ -45,33 +75,32 @@
 			<tr> <th>제목</th> <td><textarea rows="1" cols="50" name="title">${contentBoardFile.title}</textarea></td> </tr>
 			<tr> <th>내용</th> <td><textarea rows="10" cols="50" name="content">${contentBoardFile.content}</textarea></td> </tr>
 			<tr>
-				<th>첨부파일</th>
+				<th>첨부 파일</th>
 				<td>
 					<c:choose>
 						<c:when test="${empty fileNameList}">
-							<input type="file" name="files" multiple="multiple">
 							<span>현재 파일: 없음</span>
 						</c:when>
 						<c:otherwise>
 							<ul>
 					            <c:forEach var="fileName" items="${fileNameList}" varStatus="status">
 					                <li>
-					                	현재 파일: ${fileName}
-					                	<input type="file" name="files[${status.index}]">
-					                	<input type="hidden" name="fileNames[${status.index}]" value="${fileName}"> <!-- 이름만 서버로 전송, 기존파일 식별하기 위함 -->
+					                	<span>${fileName}</span>
+					                	<input type="checkbox" name="deleteFileList" value="${fileName}"> 
 					                </li>
 					            </c:forEach>
-					        </ul>
-					                 파일 추가: <input type="file" name="additionalFiles" multiple="multiple">
+					        </ul> 
 						</c:otherwise>
 					</c:choose>
 				</td>
 			</tr>
+			<tr> <th>파일 추가</th> <td><input type="file" name="files" multiple="multiple"></td> </tr>
 			<tr>
 				<td>
 					<input type="submit" value="등록">
 					<input type="button" value="닫기" id="close-btn">
 					<input type="button" value="이전" id="back-btn">
+					<input type="button" value="파일 삭제" id="files-delete-btn">
 				</td>
 			</tr>
 		</table>

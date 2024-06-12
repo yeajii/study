@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <!DOCTYPE html>
 <html>
@@ -20,17 +21,20 @@
 			});
 		}
 		
-		function popupOrDownload(fileName) {
-		    var url = '/download?fileName=' + encodeURIComponent(fileName);
-		    var newWindow = window.open();
-		    var ext = fileName.split('.').pop().toLowerCase();
+		function popupOrDownload(filePath, displayFileName) {
+			console.log("파일 경로: " + filePath);
+			console.log("파일 이름: " + displayFileName);
 			
-			if(['jpg', 'jpeg', 'png', 'gif', 'bmp'].indexOf(ext) !== -1){	// indexOf: 찾는 문자열이 없으면 -1 리턴 
+		    var newWindow = window.open();
+		    var ext = displayFileName.split('.').pop().toLowerCase();
+		    console.log("ext: " + ext);
+			
+			if(['jpg', 'jpeg', 'png', 'gif', 'bmp'].indexOf(ext) !== -1){	// indexOf: 찾는 문자열이 없으면 -1 리턴
 				// 새 창의 문서가 준비되었을 때 실행
 				 $(newWindow.document).ready(function() {
 			            var downloadLink = $('<a>', {
-			                href	: url,
-			                download: fileName,
+			                href	: filePath,
+			                download: displayFileName,
 			                text	: 'Download',
 			                css		: {
 			                    display	: 'block',
@@ -41,7 +45,7 @@
 			            $(newWindow.document.body).prepend(downloadLink);
 			            
 			            var img = $('<img>', {
-			                src	: url,
+			                src	: filePath,
 			                css	: {
 			                    display	: 'block',
 			                    maxWidth: '100%',
@@ -53,16 +57,8 @@
 			        });
 			}else{
 				// 이미지 파일이 아닌 경우 파일 다운로드
-				var anchor = $('<a>', {
-	            href		: url,
-	            download	: fileName,
-	            css			: { display: 'none' }
-	        });
-				
-	        $(newWindow.document.body).append(anchor);
-	        anchor[0].click(); 	// 다운로드 진행
-	        anchor.remove(); 	// 다운로드 후 팝업창에 표시되지 않도록 함 
-			}
+	            newWindow.location.href = filePath;
+			}	
 		}
 	</script>
 </head>
@@ -77,14 +73,16 @@
 			<th>첨부파일</th> 	
 			<td>
 				<c:choose>
-					<c:when test="${empty fileNameList}">
+					<c:when test="${empty fileInfoList}">
 						파일이 존재하지 않습니다
 					</c:when>
 					<c:otherwise>
 						<ul>
-				            <c:forEach var="fileName" items="${fileNameList}">
+				            <c:forEach var="fileInfo" items="${fileInfoList}">
+				            	<c:set var="filePath" 			value="${fn:split(fileInfo, ',')[0]}"/>
+				            	<c:set var="displayFileName" 	value="${fn:split(fileInfo, ',')[1]}"/>
 				                <li>
-							        <a href="javascript:void(0);" onclick="popupOrDownload('${fileName}')">${fileName}</a>
+							        <a href="javascript:void(0);" onclick="popupOrDownload('${filePath}', '${displayFileName}')">${displayFileName}</a>
 							    </li>
 				            </c:forEach>
 				        </ul>
@@ -97,7 +95,6 @@
 				<input type="button" id="close-btn" value="닫기">
 				<input type="button" value="수정" onclick="location.href='updateBoardFile?id=${contentBoardFile.id}'">
 				<input type="button" value="삭제" onclick="deleteBoardFile(${contentBoardFile.id})">
-				<%-- <input type="button" value="파일삭제" onclick="deleteFile(${contentBoardFile.id}, 여긴 나중에)"> --%>
 			</td>
 		</tr>
 	</table>

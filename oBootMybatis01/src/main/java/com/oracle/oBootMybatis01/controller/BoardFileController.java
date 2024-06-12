@@ -84,7 +84,7 @@ public class BoardFileController {
 			log.info("boardFileId : {}", boardFileId);
 			
 			for(MultipartFile file : files) {
-				if(!file.isEmpty()) {
+				if(file != null && !file.isEmpty()) {
 					uploadPath = "C:\\boardFile\\" + boardFileId;
 					saveName = uploadFile(file.getOriginalFilename(), file.getBytes(),uploadPath); 
 					log.info("saveName : {}", saveName); 
@@ -141,37 +141,40 @@ public class BoardFileController {
 		BoardFile contentBoardFile = bfs.contentBoardFile(id);
 		log.info("contentBoardFile : {}", contentBoardFile);
 		
-		String uploadPath = "C:\\boardFile\\" + id;	
+		// 웹 브라우저에서 파일 경로로 접근할 때는 슬래시(/)를 사용해야 됨 
+		String uploadPath = "C:/boardFile/" + id;	
 		File dir = new File(uploadPath);
 		
 		// 파일 존재하면 리스트 반환, 존재하지 않을 시 빈 리스트 반환 : 유틸성이므로 FileUnti 클래스 만듦 함수로 이 기능 만듦 
-		List<String> fileNameList = new ArrayList<>();
+		List<String> fileInfoList = new ArrayList<>();
 		if(dir.exists() && dir.isDirectory()) {
 			File[] files = dir.listFiles();			// 지정된 디렉토리의 파일 목록을 가져오기 위해 사용
 			if(files != null) {
 				for(File file : files) {
 					String fileName = file.getName();
-					fileNameList.add(removeUUIDFromFileName(fileName));
+					String displayFileName = removeUUIDFromFileName(fileName);
+	                fileInfoList.add(uploadPath + "/" + fileName + "," + displayFileName); // 경로와 표시할 이름을 함께 저장
 				}
 			}
 		}
 		
-		for(String fileName : fileNameList) {
-			log.info("fileName: {}", fileName);
-		}
+		for (String fileInfo : fileInfoList) {
+	        log.info("fileInfo: {}", fileInfo);
+	    }
 		
 		model.addAttribute("contentBoardFile", contentBoardFile);
-		model.addAttribute("fileNameList", fileNameList);
+		model.addAttribute("fileInfoList", fileInfoList);
 		
 		return "boardFile/boardFile_content";
 	}
 
-	private String removeUUIDFromFileName(String fileName) { // 나중에 이것도 뺌 
-		int firstIndex = fileName.lastIndexOf("_");			// "_" 의 인덱스 찾음, 없을 경우 -1 반환
-		int lastIndex = fileName.lastIndexOf(".");
+	// 나중에 이것도 뺌 
+	private String removeUUIDFromFileName(String fileName) { 
+		int lastIndex = fileName.lastIndexOf("_");			// "_" 의 인덱스 찾음, 없을 경우 -1 반환
+		int extensionIndex = fileName.lastIndexOf(".");
 
-		if(firstIndex != -1 && lastIndex != -1 && firstIndex < lastIndex) {
-			return fileName.substring(0, firstIndex) + fileName.substring(lastIndex);
+		if(lastIndex != -1 && extensionIndex != -1 && lastIndex < extensionIndex ) {
+			return fileName.substring(0, lastIndex) + fileName.substring(extensionIndex );
 		}else {
 			return fileName;
 		}
@@ -194,7 +197,7 @@ public class BoardFileController {
 			if(files != null) {
 				for(File file : files) {
 					String fileName = file.getName();
-					fileNameList.add(removeUUIDFromFileName(fileName));
+					fileNameList.add(fileName);
 				}
 			}
 		}
@@ -208,9 +211,8 @@ public class BoardFileController {
 	// 해당 글 수정 
 	@PostMapping(value = "updateBoardFileForm")
 	public String updateBoardFileForm(@ModelAttribute BoardFile boardFile,
-										@RequestParam(value = "files", required = false) MultipartFile[] files, // 수정은 이걸로 
-										@RequestParam(value = "additionalFiles", required = false) MultipartFile[] additionalFiles, // 제거하고 체크 박스 여러 개 담는 리스트 
-										@RequestParam(value = "fileNames", required = false) String[] fileNames, // 제거하기 
+										@RequestParam(value = "files", required = false) MultipartFile[] files,
+										@RequestParam(value = "deleteFileList", required = false) List<String> deleteFileList,
 										HttpServletRequest request,
 										RedirectAttributes redirectAttributes) throws IOException {
 		log.info("----- updateBoardFileForm Start -----");
@@ -223,27 +225,21 @@ public class BoardFileController {
 	            dir.mkdir();
 	        }
 	        
-	        // 기존 파일 삭제 및 새로운 파일 업로드
-	        if (files != null) {
-	        	log.info("files.length: {}", files.length);
-	            for (int i = 0; i < files.length; i++) {
-	                MultipartFile file = files[i];
-	                if (file != null && !file.isEmpty()) {
-	                    String fileName = (fileNames != null && i < fileNames.length) ? fileNames[i] : null;
-	                    if (fileName != null) {
-	                        // 기존 파일 삭제
-	                        deleteFile(uploadPath, fileName);
-	                    }
-	                    // 새 파일 업로드
-	                    String saveName = uploadFile(file.getOriginalFilename(), file.getBytes(), uploadPath);
-	                    log.info("saveName : {}", saveName);
-	                }
-	            }
-	        }
+	        // 기존 파일 삭제
+	        if (deleteFileList != null) {
+	        	log.info("deleteFileList.size(): {}", deleteFileList.size());
+	            for (String fileName : deleteFileList) {
+	            	log.info("삭제할 파일 이름: {}", fileName);
+                    deleteFile(uploadPath, fileName);
+                }
+            }
+	        
+	        // 만약 폴더 안에 파일 전부 삭제할 경우, 폴더도 같이 삭제되게 해야 됨
+	        
 
-	        // 추가 파일 업로드
-	        if (additionalFiles != null) {
-	            for (MultipartFile file : additionalFiles) {
+	        // 파일 업로드
+	        if (files != null) {
+	            for (MultipartFile file : files) {
 	                if (file != null && !file.isEmpty()) {
 	                    String saveName = uploadFile(file.getOriginalFilename(), file.getBytes(), uploadPath);
 	                    log.info("saveName : {}", saveName);
@@ -260,12 +256,12 @@ public class BoardFileController {
 	        
 	    } catch (Exception e) {
 	        log.error("Error during updateBoardFileForm process: ", e);
-	        // 예외 처리 및 적절한 에러 페이지로 이동하도록 설정
+	        
 	        return "errorPage";
 	    }
 	}
 
-	// 파일 수정하기 위해 기존 파일 삭제  
+	// 파일 삭제  
 	private void deleteFile(String uploadPath, String fileName) {
 		File file = new File(uploadPath, fileName);
 		if(file.exists()) {
