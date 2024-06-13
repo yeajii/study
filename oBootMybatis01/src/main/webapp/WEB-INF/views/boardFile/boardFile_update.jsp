@@ -38,23 +38,29 @@
 			});
 			
 			$('#files-delete-btn').on('click', function(){
+				if($('input[type="checkbox"][name="deleteFileList"]:checked').length === 0){
+			        alert("삭제할 파일을 선택하세요");
+			        return; 
+			    }
+				
 				if(confirm('선택한 파일을 삭제하시겠습니까?')){
-					var deleteFileList = [];
-					$('input[type="checkbox"][name="deleteFileList"]:checked').each(function(){ 
-		                deleteFileList.push($(this).val());
-		            });
-		            
-		            $('<input />').attr('type', 'hidden')
-	                .attr('name', 'deleteFileList')
-	                .attr('value', deleteFileList)
-	                .appendTo('form');
-		            
-					$("form").submit();
-					console.log("폼 제출됨");
-				}else{
-					return false;
-				}
+			        var deleteFileList = [];
+			        $('input[type="checkbox"][name="deleteFileList"]:checked').each(function(){ 
+			            deleteFileList.push($(this).val());
+			        });
+			        
+			        $('<input />').attr('type', 'hidden')
+			            .attr('name', 'deleteFileList')
+			            .attr('value', deleteFileList)
+			            .appendTo('form');
+			        
+			        $("form").submit();
+			        console.log("폼 제출됨");
+			    } else {
+			        return false;
+			    }
 			});
+
 		}
 	</script>
 </head>

@@ -2,19 +2,13 @@ package com.oracle.oBootMybatis01.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.oracle.oBootMybatis01.model.BoardFile;
 import com.oracle.oBootMybatis01.service.BoardFileService;
 
+import comUtil.FileUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -86,7 +81,7 @@ public class BoardFileController {
 			for(MultipartFile file : files) {
 				if(file != null && !file.isEmpty()) {
 					uploadPath = "C:\\boardFile\\" + boardFileId;
-					saveName = uploadFile(file.getOriginalFilename(), file.getBytes(),uploadPath); 
+					saveName = FileUtil.uploadFile(file.getOriginalFilename(), file.getBytes(),uploadPath);
 					log.info("saveName : {}", saveName); 
 				}
 			}
@@ -96,42 +91,13 @@ public class BoardFileController {
 	    	
 	    	// 업로드된 파일 삭제 
 	    	if (uploadPath != null && saveName != null) {
-	            File uploadedFile = new File(uploadPath, saveName);
-	            if (uploadedFile.exists()) {
-	                uploadedFile.delete();
-	                log.info("Uploaded file deleted due to insert error: {}", saveName);
-	            }
-	        }
+	    		FileUtil.deleteFile(uploadPath, saveName);
+	    		log.info("Uploaded file deleted due to insert error: {}", saveName);
+	    	}
 	        throw e;
 	    }
 	    return "redirect:/boardFile";
-	}
-	
-	private String uploadFile(String originalName, byte[] bytes, String uploadPath) throws IOException {
-		log.info("----- private uploadFile method Start -----");
-		log.info("uploadPath : {}", uploadPath);
-		
-		UUID uid = UUID.randomUUID();	
-		
-		// 신규 폴더 (directory) 생성
-		File fileDirectory = new File(uploadPath);
-		if(!fileDirectory.exists()) {
-			fileDirectory.mkdirs();
-			log.info("업로드용 폴더 생성 : {}", uploadPath);
-		}
-		
-		// 파일 이름 생성 
-		int index = originalName.lastIndexOf(".");
-		String extension = originalName.substring(index + 1);
-		String nameWithoutExtension = originalName.substring(0, index);
-		String savedName = nameWithoutExtension + "_" + uid.toString() + "." + extension;
-		log.info("savedName : {}", savedName);
-		
-		File target = new File(uploadPath, savedName);
-		Files.write(target.toPath(), bytes);
-		
-		return savedName;
-	}
+	}	
 	
 	// 상세 페이지 --------------------------------------------------------------
 	@GetMapping(value = "contentBoardFile")
@@ -152,7 +118,7 @@ public class BoardFileController {
 			if(files != null) {
 				for(File file : files) {
 					String fileName = file.getName();
-					String displayFileName = removeUUIDFromFileName(fileName);
+					String displayFileName = FileUtil.removeUUIDFromFileName(fileName);
 	                fileInfoList.add(uploadPath + "/" + fileName + "," + displayFileName); // 경로와 표시할 이름을 함께 저장
 				}
 			}
@@ -166,18 +132,6 @@ public class BoardFileController {
 		model.addAttribute("fileInfoList", fileInfoList);
 		
 		return "boardFile/boardFile_content";
-	}
-
-	// 나중에 이것도 뺌 
-	private String removeUUIDFromFileName(String fileName) { 
-		int lastIndex = fileName.lastIndexOf("_");			// "_" 의 인덱스 찾음, 없을 경우 -1 반환
-		int extensionIndex = fileName.lastIndexOf(".");
-
-		if(lastIndex != -1 && extensionIndex != -1 && lastIndex < extensionIndex ) {
-			return fileName.substring(0, lastIndex) + fileName.substring(extensionIndex );
-		}else {
-			return fileName;
-		}
 	}
 	
 	// 해당 글 수정 하기 위한 상세 정보 가져오기 ---------------------------------------------
@@ -213,7 +167,6 @@ public class BoardFileController {
 	public String updateBoardFileForm(@ModelAttribute BoardFile boardFile,
 										@RequestParam(value = "files", required = false) MultipartFile[] files,
 										@RequestParam(value = "deleteFileList", required = false) List<String> deleteFileList,
-										HttpServletRequest request,
 										RedirectAttributes redirectAttributes) throws IOException {
 		log.info("----- updateBoardFileForm Start -----");
 		
@@ -230,18 +183,21 @@ public class BoardFileController {
 	        	log.info("deleteFileList.size(): {}", deleteFileList.size());
 	            for (String fileName : deleteFileList) {
 	            	log.info("삭제할 파일 이름: {}", fileName);
-                    deleteFile(uploadPath, fileName);
+	            	FileUtil.deleteFile(uploadPath, fileName);
                 }
             }
 	        
-	        // 만약 폴더 안에 파일 전부 삭제할 경우, 폴더도 같이 삭제되게 해야 됨
-	        
+	        // 폴더 안에 파일 전부 삭제된 경우, 폴더도 삭제함
+	        if(dir.isDirectory() && dir.list().length == 0) {
+	        	dir.delete();
+	        	log.info("폴더 삭제됨");
+	        }
 
 	        // 파일 업로드
 	        if (files != null) {
 	            for (MultipartFile file : files) {
 	                if (file != null && !file.isEmpty()) {
-	                    String saveName = uploadFile(file.getOriginalFilename(), file.getBytes(), uploadPath);
+	                	String saveName = FileUtil.uploadFile(file.getOriginalFilename(), file.getBytes(), uploadPath);
 	                    log.info("saveName : {}", saveName);
 	                }
 	            }
@@ -261,14 +217,7 @@ public class BoardFileController {
 	    }
 	}
 
-	// 파일 삭제  
-	private void deleteFile(String uploadPath, String fileName) {
-		File file = new File(uploadPath, fileName);
-		if(file.exists()) {
-			file.delete();
-			log.info("파일 수정하기 위해 기존 파일: {} 삭제 완료!", fileName);
-		}
-	} 
+	
 	
 	
 }
