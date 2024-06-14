@@ -29,6 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class BoardFileController {
 	
+	public static String path = "C:\\boardFile\\";
 	private final BoardFileService bfs;
 	
 	// 전체 리스트 --------------------------------------------------------------
@@ -61,8 +62,7 @@ public class BoardFileController {
 	// 새 글 입력 
 	@PostMapping(value = "insertBoardFileForm")
 	public String insertBoardFileForm(@ModelAttribute BoardFile boardFile
-									,@RequestParam(value = "files", required = false) MultipartFile[] files
-									,HttpServletRequest request) throws IOException {
+									,@RequestParam(value = "files", required = false) MultipartFile[] files) throws IOException {
 		log.info("----- insertBoardFileForm Start -----");		
 		
 	    int boardFileId;
@@ -80,7 +80,7 @@ public class BoardFileController {
 			
 			for(MultipartFile file : files) {
 				if(file != null && !file.isEmpty()) {
-					uploadPath = "C:\\boardFile\\" + boardFileId;
+					uploadPath = path + boardFileId;	
 					saveName = FileUtil.uploadFile(file.getOriginalFilename(), file.getBytes(),uploadPath);
 					log.info("saveName : {}", saveName); 
 				}
@@ -94,6 +94,10 @@ public class BoardFileController {
 	    		FileUtil.deleteFile(uploadPath, saveName);
 	    		log.info("Uploaded file deleted due to insert error: {}", saveName);
 	    	}
+	    	
+	    	// 폴더도 삭제되게 해야 됨  
+	    	
+	    	
 	        throw e;
 	    }
 	    return "redirect:/boardFile";
@@ -107,21 +111,14 @@ public class BoardFileController {
 		BoardFile contentBoardFile = bfs.contentBoardFile(id);
 		log.info("contentBoardFile : {}", contentBoardFile);
 		
-		// 웹 브라우저에서 파일 경로로 접근할 때는 슬래시(/)를 사용해야 됨 
-		String uploadPath = "C:/boardFile/" + id;	
-		File dir = new File(uploadPath);
+		String uploadPath = path + id;
+
+		List<String> fileNameList = FileUtil.fileNameList(uploadPath);
 		
-		// 파일 존재하면 리스트 반환, 존재하지 않을 시 빈 리스트 반환 : 유틸성이므로 FileUnti 클래스 만듦 함수로 이 기능 만듦 
 		List<String> fileInfoList = new ArrayList<>();
-		if(dir.exists() && dir.isDirectory()) {
-			File[] files = dir.listFiles();			// 지정된 디렉토리의 파일 목록을 가져오기 위해 사용
-			if(files != null) {
-				for(File file : files) {
-					String fileName = file.getName();
-					String displayFileName = FileUtil.removeUUIDFromFileName(fileName);
-	                fileInfoList.add(uploadPath + "/" + fileName + "," + displayFileName); // 경로와 표시할 이름을 함께 저장
-				}
-			}
+		for(String fileName : fileNameList) {
+			String displayFileName = FileUtil.removeUUIDFromFileName(fileName);
+			fileInfoList.add(uploadPath + "/" + fileName + "," + displayFileName);		// 경로와 표시할 이름을 함께 저장
 		}
 		
 		for (String fileInfo : fileInfoList) {
@@ -142,19 +139,8 @@ public class BoardFileController {
 		BoardFile contentBoardFile = bfs.contentBoardFile(id);
 		log.info("contentBoardFile : {}", contentBoardFile);
 		
-		String uploadPath = "C:\\boardFile\\" + id;
-		File dir = new File(uploadPath);
-		
-		List<String> fileNameList = new ArrayList<>();
-		if(dir.exists() && dir.isDirectory()) {
-			File[] files = dir.listFiles();			
-			if(files != null) {
-				for(File file : files) {
-					String fileName = file.getName();
-					fileNameList.add(fileName);
-				}
-			}
-		}
+		String uploadPath = path + id;		
+		List<String> fileNameList = FileUtil.fileNameList(uploadPath);
 		
 		model.addAttribute("contentBoardFile", contentBoardFile);
 		model.addAttribute("fileNameList", fileNameList);
@@ -171,7 +157,7 @@ public class BoardFileController {
 		log.info("----- updateBoardFileForm Start -----");
 		
 	    try {
-	        String uploadPath = "C:\\boardFile\\" + boardFile.getId();
+	        String uploadPath = path + boardFile.getId();
 	        File dir = new File(uploadPath);
 
 	        if (!dir.exists()) {
@@ -213,7 +199,7 @@ public class BoardFileController {
 	    } catch (Exception e) {
 	        log.error("Error during updateBoardFileForm process: ", e);
 	        
-	        return "errorPage";
+	        return "error";
 	    }
 	}
 

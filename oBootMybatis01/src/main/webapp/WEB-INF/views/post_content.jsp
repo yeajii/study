@@ -245,7 +245,8 @@
 	}
 	
 	function popupOrDownload(url, fileName){
-		console.log("url: " + url);
+		console.log("url: " + url);				// /upload/ede3bc74-104f-48d4-8da9-2ebb3089f520_5.jpg
+		console.log("fileName: " + fileName);   // 5.jpg
 		
 		var newWindow = window.open();					// 새 창 열기
 		var ext = url.split('.').pop().toLowerCase();	// 파일의 확장자 추출하여 소문자로 변환
@@ -277,7 +278,7 @@
 		            $(newWindow.document.body).append(img);
 		        });
 		}else{
-			// 이미지 파일이 아닌 경우 파일 다운로드
+			// 이미지 파일이 아닌 경우 팝업 창 없이 바로 다운로드
 			var anchor = $('<a>', {
             href		: url,
             download	: fileName,

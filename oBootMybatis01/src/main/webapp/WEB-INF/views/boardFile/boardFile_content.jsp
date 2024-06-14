@@ -22,16 +22,16 @@
 		}
 		
 		function popupOrDownload(filePath, displayFileName) {
-			console.log("파일 경로: " + filePath);
-			console.log("파일 이름: " + displayFileName);
+			console.log("파일 경로: " + filePath);				// C:/boardFile/12/정처기 답안표_6abd875a-9a7f-4adf-96fc-221fa363278a.hwpx
+			console.log("파일 이름: " + displayFileName);		// 정처기 답안표.hwpx
 			
-		    var newWindow = window.open();
 		    var ext = displayFileName.split('.').pop().toLowerCase();
 		    console.log("ext: " + ext);
 			
 			if(['jpg', 'jpeg', 'png', 'gif', 'bmp'].indexOf(ext) !== -1){	// indexOf: 찾는 문자열이 없으면 -1 리턴
 				// 새 창의 문서가 준비되었을 때 실행
-				 $(newWindow.document).ready(function() {
+				var newWindow = window.open();
+				$(newWindow.document).ready(function() {
 			            var downloadLink = $('<a>', {
 			                href	: filePath,
 			                download: displayFileName,
@@ -56,10 +56,22 @@
 			            $(newWindow.document.body).append(img);
 			        });
 			}else{
-				// 이미지 파일이 아닌 경우 파일 다운로드
-	            newWindow.location.href = filePath;
-			}	
+				console.log("사진 아닌 경우");
+				// 이미지 파일이 아닌 경우 팝업 창 없이 바로 다운로드
+		        var anchor = $('<a>', {
+		            href        : filePath,
+		            download    : displayFileName,
+		            css         : { display: 'none' }
+		        });
+		        
+		        console.log("1");
+
+		        $('body').append(anchor);
+		        anchor.get(0).click();
+		        anchor.remove();
+		    }
 		}
+		
 	</script>
 </head>
 <body>
@@ -92,7 +104,7 @@
 		</tr>
 		<tr>
 			<td>
-				<input type="button" id="close-btn" value="닫기">
+				<input type="button" id="close-btn" value="목록">
 				<input type="button" value="수정" onclick="location.href='updateBoardFile?id=${contentBoardFile.id}'">
 				<input type="button" value="삭제" onclick="deleteBoardFile(${contentBoardFile.id})">
 			</td>

@@ -39,28 +39,33 @@
 			
 			$('#files-delete-btn').on('click', function(){
 				if($('input[type="checkbox"][name="deleteFileList"]:checked').length === 0){
-			        alert("삭제할 파일을 선택하세요");
-			        return; 
+			    	if(confirm("파일 삭제 안하면 확인을 눌러주세요")){
+			    		$("form").submit();
+			            return;		
+			    	}else{
+			    		return false;
+			    	}
 			    }
 				
-				if(confirm('선택한 파일을 삭제하시겠습니까?')){
-			        var deleteFileList = [];
-			        $('input[type="checkbox"][name="deleteFileList"]:checked').each(function(){ 
-			            deleteFileList.push($(this).val());
-			        });
-			        
-			        $('<input />').attr('type', 'hidden')
-			            .attr('name', 'deleteFileList')
-			            .attr('value', deleteFileList)
-			            .appendTo('form');
-			        
-			        $("form").submit();
-			        console.log("폼 제출됨");
-			    } else {
-			        return false;
-			    }
-			});
-
+				if($('input[type="checkbox"][name="deleteFileList"]:checked').length >= 1){
+		            if(confirm('선택한 파일을 삭제하시겠습니까?')){
+		                var deleteFileList = [];
+		                $('input[type="checkbox"][name="deleteFileList"]:checked').each(function(){ 
+		                    deleteFileList.push($(this).val());
+		                });
+		                
+		                $('<input />').attr('type', 'hidden')
+		                    .attr('name', 'deleteFileList')
+		                    .attr('value', deleteFileList)
+		                    .appendTo('form');
+		                
+		                $("form").submit();
+		            } else {
+		                return false;
+		            }
+		        }
+		    });
+			
 		}
 	</script>
 </head>
@@ -103,10 +108,9 @@
 			<tr> <th>파일 추가</th> <td><input type="file" name="files" multiple="multiple"></td> </tr>
 			<tr>
 				<td>
-					<input type="submit" value="등록">
-					<input type="button" value="닫기" id="close-btn">
+					<input type="button" value="목록" id="close-btn">
 					<input type="button" value="이전" id="back-btn">
-					<input type="button" value="파일 삭제" id="files-delete-btn">
+					<input type="submit" value="등록" id="files-delete-btn">
 				</td>
 			</tr>
 		</table>
