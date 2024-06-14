@@ -87,7 +87,7 @@ public class BoardFileController {
 			}
 	
 	    } catch (Exception e) {
-	    	log.error("Error during insertBoardFileForm process: ", e.getMessage());
+	    	log.error("Error during insertBoardFileForm process: ", e);
 	    	
 	    	// 업로드된 파일 삭제 
 	    	if (uploadPath != null && saveName != null) {
@@ -95,9 +95,15 @@ public class BoardFileController {
 	    		log.info("Uploaded file deleted due to insert error: {}", saveName);
 	    	}
 	    	
-	    	// 폴더도 삭제되게 해야 됨  
-	    	
-	    	
+	    	// 파일 전부 삭제되므로 폴더 삭제
+	    	File dir = new File(uploadPath);
+	    	if(dir.isDirectory() && dir.list().length == 0) {
+	    		if(dir.delete()) {
+	    			log.info("폴더 삭제됨: {}", uploadPath);
+	    		}else {
+	    			log.warn("폴더 삭제 실패: {}", uploadPath);
+	    		}
+	    	}
 	        throw e;
 	    }
 	    return "redirect:/boardFile";
@@ -175,8 +181,11 @@ public class BoardFileController {
 	        
 	        // 폴더 안에 파일 전부 삭제된 경우, 폴더도 삭제함
 	        if(dir.isDirectory() && dir.list().length == 0) {
-	        	dir.delete();
-	        	log.info("폴더 삭제됨");
+	        	if (dir.delete()) {
+                    log.info("폴더 삭제됨: {}", uploadPath);
+                } else {
+                    log.warn("폴더 삭제 실패: {}", uploadPath);
+                }
 	        }
 
 	        // 파일 업로드

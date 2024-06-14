@@ -80,7 +80,7 @@ public class FileUtil {
 		File file = new File(uploadPath, fileName);
 		if(file.exists()) {
 			file.delete();
-			log.info("파일 수정하기 위해 기존 파일: {} 삭제 완료!", fileName);
+			log.info("{} 삭제 완료!", fileName);
 		}
 	}
 
