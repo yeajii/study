@@ -38,6 +38,17 @@
 			});
 			
 			$('#files-delete-btn').on('click', function(){
+				// 파일 첨부 영역에 파일이 등록되지 않은 경우
+				if($('span').text() === '현재 파일: 없음'){
+					if(confirm("제출하시겠습니까?")){
+						$("form").submit();
+			            return;	
+					}else{
+						return false;
+					}
+				}
+				
+				// 파일이 등록된 경우
 				if($('input[type="checkbox"][name="deleteFileList"]:checked').length === 0){
 			    	if(confirm("파일 삭제 안하면 확인을 눌러주세요")){
 			    		$("form").submit();
@@ -53,7 +64,7 @@
 		                $('input[type="checkbox"][name="deleteFileList"]:checked').each(function(){ 
 		                    deleteFileList.push($(this).val());
 		                });
-		                
+		             
 		                $('<input />').attr('type', 'hidden')
 		                    .attr('name', 'deleteFileList')
 		                    .attr('value', deleteFileList)

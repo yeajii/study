@@ -3,9 +3,9 @@ package com.oracle.oBootMybatis01.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
+import java.util.Set;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -124,7 +124,7 @@ public class BoardFileController {
 		List<String> fileInfoList = new ArrayList<>();
 		for(String fileName : fileNameList) {
 			String displayFileName = FileUtil.removeUUIDFromFileName(fileName);
-			fileInfoList.add(uploadPath + "/" + fileName + "," + displayFileName);		// 경로와 표시할 이름을 함께 저장
+			fileInfoList.add(uploadPath + "\\" + fileName + "," + displayFileName);			// 경로와 표시할 이름을 함께 저장
 		}
 		
 		for (String fileInfo : fileInfoList) {
@@ -171,13 +171,15 @@ public class BoardFileController {
 	        }
 	        
 	        // 기존 파일 삭제
+	        // Set: deleteFileList 배열에 파일 이름이 중복되어 추가되거나, 자바스크립트 폼에 히든 필드 여러 번 추가하거나, 폼 제출 과정에서 중복 이름이 생성되는 경우 방지하기 위함 
 	        if (deleteFileList != null) {
-	        	log.info("deleteFileList.size(): {}", deleteFileList.size());
-	            for (String fileName : deleteFileList) {
-	            	log.info("삭제할 파일 이름: {}", fileName);
-	            	FileUtil.deleteFile(uploadPath, fileName);
-                }
-            }
+	            Set<String> uniqueFiles = new HashSet<>(deleteFileList);	
+	            log.info("uniqueFiles.size(): {}", uniqueFiles.size());
+	            for (String fileName : uniqueFiles) {
+	                log.info("삭제할 파일 이름: {}", fileName);
+	                FileUtil.deleteFile(uploadPath, fileName);
+	            }
+	        }
 	        
 	        // 폴더 안에 파일 전부 삭제된 경우, 폴더도 삭제함
 	        if(dir.isDirectory() && dir.list().length == 0) {

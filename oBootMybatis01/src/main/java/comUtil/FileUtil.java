@@ -78,10 +78,16 @@ public class FileUtil {
 		log.info("------ FileUtil deleteFile1 start --------");
 		
 		File file = new File(uploadPath, fileName);
-		if(file.exists()) {
-			file.delete();
-			log.info("{} 삭제 완료!", fileName);
-		}
+	    if (file.exists()) {
+	        if (file.delete()) {
+	            log.info("{} 삭제 완료!", fileName);
+	        } else {
+	            log.warn("{} 삭제 실패!", fileName);
+	        }
+	    } else {
+	        log.warn("파일이 존재하지 않습니다: {}", fileName);
+	    }
 	}
+	
 
 }
