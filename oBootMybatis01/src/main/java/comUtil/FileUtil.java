@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class FileUtil {
 	
-	// 파일 업로드 
+	// File Upload 
 	public static String uploadFile(String originalName, byte[] bytes, String uploadPath) throws IOException {
 		log.info("----- FileUtil uploadFile method Start -----");
 		log.info("uploadPath : {}", uploadPath);
